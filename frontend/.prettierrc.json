@@ -1,0 +1,12 @@
+{
+    "$schema": "https://json.schemastore.org/prettierrc",
+    "semi": false,
+    "tabWidth": 4,
+    "printWidth": 1000000000,
+    "trailingComma": "none",
+    "htmlWhitespaceSensitivity": "ignore",
+    "jsxBracketSameLine": true,
+    "bracketSameLine": true,
+    "singleAttributePerLine": true,
+    "prettier.arrayExpand": true
+}

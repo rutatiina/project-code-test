@@ -1,0 +1,29 @@
+{
+    "name": "project-code/task-manager",
+    "description": "Project manager package",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gilbert Rutatiina",
+            "email": "rutatiina@ruginem.org"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "laravel/framework": "^11.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "ProjectCode\\TaskManager\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ProjectCode\\TaskManager\\Providers\\TaskManagerServiceProvider"
+            ]
+        }
+    }
+}
