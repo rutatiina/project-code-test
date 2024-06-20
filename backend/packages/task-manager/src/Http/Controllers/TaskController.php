@@ -1,22 +1,24 @@
 <?php
 
 namespace ProjectCode\TaskManager\Http\Controllers;
-  
+
 use App\Models\User;
 use Illuminate\View\View;
 use App\Http\Controllers\Controller;
+use ProjectCode\TaskManager\Models\Task;
 
- 
 class TaskController extends Controller
 {
     /**
      * Show the profile for a given user.
      */
-    public function index(string $id): array
+    public function index()
     {
-        return [];
+        $tasks = Task::get();
+        // return $tasks->toArray();
+        return response()->json($tasks);
     }
-    
+
     /**
      * Show the profile for a given user.
      */

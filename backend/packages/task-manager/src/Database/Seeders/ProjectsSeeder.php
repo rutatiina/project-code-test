@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use ProjectCode\TaskManager\Models\Category;
 use ProjectCode\TaskManager\Models\Priority;
+use ProjectCode\TaskManager\Models\Status;
 
 class ProjectsSeeder extends Seeder
 {
@@ -39,6 +40,7 @@ class ProjectsSeeder extends Seeder
                 //randommly get two categories
                 $category = Category::inRandomOrder()->first();
                 $priority = Priority::inRandomOrder()->first();
+                $status = Status::inRandomOrder()->first();
                 $taskTitle = fake()->text(50);
                 $tasks[] = [
                     'project_id' => $project->id,
@@ -46,7 +48,8 @@ class ProjectsSeeder extends Seeder
                     'slug' => Str::of($taskTitle)->slug('-'),
                     'description' => fake()->text(200),
                     'category_id' => $category->id,
-                    'priority_id' => $priority->id
+                    'priority_id' => $priority->id,
+                    'status_id' => $status->id
                 ];
             }
 

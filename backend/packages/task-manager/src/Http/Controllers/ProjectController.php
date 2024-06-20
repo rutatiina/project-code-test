@@ -3,15 +3,17 @@
 namespace ProjectCode\TaskManager\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use ProjectCode\TaskManager\Models\Project;
 
 class ProjectController extends Controller
 {
     /**
      * Show the profile for a given user.
      */
-    public function index(string $id): array
+    public function index()
     {
-        return [];
+        $projects = Project::get();
+        return response()->json($projects);
     }
 
     /**
