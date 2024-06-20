@@ -12,5 +12,10 @@ module.exports = {
     ],
     parserOptions: {
         ecmaVersion: "latest"
+    },
+    rules: {
+        // override/add rules settings here, such as:
+        // 'vue/no-unused-vars': 'error'
+        "array-element-newline": "always"
     }
 }
