@@ -29,11 +29,7 @@ class TasksSeeder extends Seeder
         }
 
         foreach ($tasks as $task) {
-            // DB::table('tasks')->insert($task);
-            // DB::table('tasks')->insertOrIgnore($task);
             Task::create($task);
-            // print_r($task);
         }
-        // print_r($task);
     }
 }

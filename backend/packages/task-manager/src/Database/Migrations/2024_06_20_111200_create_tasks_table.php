@@ -20,11 +20,11 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);
 
             $table->unsignedBigInteger('project_id');
-            $table->string('tag')->nullable(); //primary or default tag of the post
+            $table->json('tag')->nullable()->default("[]"); //primary or default tag of the post
             $table->string('title');
             $table->string('slug');
-            $table->string('priority_level')->nullable();
-            $table->string('category_id')->nullable();
+            $table->unsignedBigInteger('priority_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('description')->nullable();
 
             //relationships

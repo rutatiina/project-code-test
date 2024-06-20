@@ -3,7 +3,6 @@
 namespace ProjectCode\TaskManager\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use ProjectCode\TaskManager\Database\Seeders\TasksSeeder;
 
 class BaseSeeder extends Seeder
 {
@@ -15,7 +14,10 @@ class BaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            TasksSeeder::class,
+            CategoriesSeeder::class,
+            PrioritiesSeeder::class,
+            TagsSeeder::class,
+            ProjectsSeeder::class,
         ]);
     }
 }
