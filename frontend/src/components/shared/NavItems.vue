@@ -83,26 +83,17 @@
                 class="grid grid-cols-2 gap-2 -space-y-0"
                 v-if="selectedForm === 'tag'">
                 <Input
-                    placeholder="Title"
+                    v-model="tagRecord.name"
+                    placeholder="Name"
                     class="col-span-2" />
-                <Input
-                    placeholder="Start Date"
-                    type="date" />
-                <Input
-                    placeholder="End Date"
-                    type="date" />
-                <Input
-                    placeholder="Priority"
-                    class="col-span-2" />
+
                 <TextArea
+                    v-model="tagRecord.description"
                     rows="5"
                     placeholder="Description"
                     class="col-span-2" />
-                <TextArea
-                    rows="5"
-                    placeholder="Members"
-                    class="col-span-2" />
                 <Button
+                    @click.prevent="tagStore"
                     label="Add new task"
                     icon="PlusIcon"
                     color="bg-lime-500 text-white col-span-2"
@@ -230,6 +221,7 @@
 
 <script setup>
 import { ref, provide } from "vue"
+import axios from "axios"
 import * as Icons from "@heroicons/vue/24/outline"
 import Modal from "./Modal.vue"
 import Input from "./Input.vue"
@@ -264,6 +256,27 @@ const showForm = (form) => {
     isOpen.value = true
     selectedForm.value = form
     console.log(form, isOpen.value)
+}
+
+///////////////////////
+
+const tagRecord = ref({
+    name: "",
+    description: ""
+})
+
+const tagStore = async () => {
+    try {
+        const response = await axios.post("/tags", tagRecord.value)
+        // Handle successful response (optional)
+        console.log("Data submitted successfully:", response.data)
+    } catch (error) {
+        console.log(error)
+        // isError.value = true
+        // error.value = error.message || "An error occurred."
+    } finally {
+        // Optional cleanup or reset after submission
+    }
 }
 </script>
 

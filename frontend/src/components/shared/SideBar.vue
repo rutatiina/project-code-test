@@ -12,7 +12,7 @@
             size="xl" />
 
         <div class="space-y-4">
-            <NavList :items="navItems" />
+            <NavItems :items="navItems" />
         </div>
 
         <div class="fixed bottom-0 w-1/4 h-auto left-0 p-7 bg-lime-50 border-t border-r">
@@ -44,7 +44,7 @@ import Button from "./Button.vue"
 import Fab from "./Fab.vue"
 import Tag from "./Tag.vue"
 import Card from "./Card.vue"
-import NavList from "./NavItems.vue"
+import NavItems from "./NavItems.vue"
 
 const navItems = [
     { label: "Plan", icon: "CalendarIcon", subList: [] },

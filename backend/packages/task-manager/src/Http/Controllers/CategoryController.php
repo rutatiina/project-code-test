@@ -1,51 +1,133 @@
 <?php
 
 namespace ProjectCode\TaskManager\Http\Controllers;
-  
-use App\Models\User;
-use Illuminate\View\View;
-use App\Http\Controllers\Controller;
 
- 
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use ProjectCode\TaskManager\Models\Category;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+
 class CategoryController extends Controller
 {
     /**
-     * Show the profile for a given user.
+     * fetch records.
+     * GET - api/categories
      */
-    public function index(string $id): array
+    public function index()
     {
-        return [];
-    }
-    
-    /**
-     * Show the profile for a given user.
-     */
-    public function store(string $id): array
-    {
-        return [];
+        $records = Category::get();
+        $response = [
+            "status" => "success",
+            "data" => $records,
+        ];
+        return response()->json($response);
     }
 
     /**
-     * show given record
+     * store record.
+     * POST - api/categories
      */
-    public function show(string $id): array
+    public function store(Request $request)
     {
-        return [];
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                "status" => "error",
+                "data" => $validator->errors(),
+            ];
+            return response()->json($response);
+        }
+
+        $record = new Category();
+        $record->name = $request["name"];
+        $record->slug = Str::of($request["name"])->slug('-');
+        $record->description = $request["description"];
+        $record->save();
+        $record = $record->fresh();
+
+        $response = [
+            "status" => "success",
+            "data" => $record,
+        ];
+        return response()->json($response);
     }
 
     /**
-     * edit / update given record.
+     * show record
+     * GET - api/categories/{category}
      */
-    public function update(string $id): array
+    public function show(string $id)
     {
-        return [];
+        $record = Category::find($id);
+        $response = [
+            "status" => "success",
+            "data" => $record,
+        ];
+        return response()->json($response);
     }
 
     /**
-     * destroy given record.
+     * edit / update record.
+     * PATCH - api/categories/{category}
      */
-    public function destroy(string $id): array
+    public function update(Request $request, string $category)
     {
-        return [];
+        $request->request->add(['id' => $category]);
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:categories,id',
+            'name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                "status" => "error",
+                "data" => $validator->errors(),
+            ];
+            return response()->json($response);
+        }
+
+        $record = Category::find($category);
+        $record->name = $request->name;
+        $record->slug = Str::of($request->name)->slug('-');
+        $record->description = $request->description;
+        $record->save();
+        $record = $record->fresh();
+
+        $response = [
+            "status" => "success",
+            "data" => $record,
+        ];
+        return response()->json($response);
+    }
+
+    /**
+     * destroy record.
+     * DELETE - api/categories/{category}
+     */
+    public function destroy(string $id)
+    {
+        $record = Category::find($id);
+
+        if (!$record) {
+            $response = [
+                "status" => "error",
+                "data" => [
+                    "Record does not exist"
+                ],
+            ];
+            return response()->json($response);
+        }
+
+        $record->delete();
+        $response = [
+            "status" => "success",
+            "data" => [],
+        ];
+        return response()->json($response);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace ProjectCode\TaskManager\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use ProjectCode\TaskManager\Models\Task;
 
@@ -14,9 +12,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::get();
-        // return $tasks->toArray();
-        return response()->json($tasks);
+        $records = Task::get();
+        $response = [
+            "status" => "success",
+            "data" => $records,
+        ];
+        return response()->json($response);
     }
 
     /**

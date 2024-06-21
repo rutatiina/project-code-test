@@ -2,17 +2,18 @@
 
 namespace ProjectCode\TaskManager\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use ProjectCode\TaskManager\Models\Priority;
 
-class PriorityController extends Controller
+use App\Http\Controllers\Controller;
+use ProjectCode\TaskManager\Models\Status;
+
+class StatusController extends Controller
 {
     /**
      * Show the profile for a given user.
      */
-    public function index(string $id)
+    public function index()
     {
-        $records = Priority::get();
+        $records = Status::get();
         $response = [
             "status" => "success",
             "data" => $records,
