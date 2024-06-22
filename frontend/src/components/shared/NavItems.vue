@@ -1,6 +1,6 @@
 <template>
     <div
-        v-for="item in props.items"
+        v-for="item in navItems"
         :key="item"
         @click="openCloseSublists(item.label)"
         class="w-full h-auto flex-col flex -my-2">
@@ -26,6 +26,15 @@
             v-if="item.subList.length > 0 && subListsOpen.includes(item.label)"
             class="pl-10 space-y-4">
             <div
+                class="flex items-center space-x-2 cursor-pointer text-sm mt-4"
+                @click="showForm(item.name)">
+                <component
+                    class="h-5 w-5 stroke-2"
+                    :is="Icons['PlusCircleIcon']"
+                    v-if="item.subList.length > 0 && subListsOpen.includes(item.label)"></component>
+                <span>Add {{ item.name }}</span>
+            </div>
+            <div
                 v-for="item in item.subList"
                 :key="item">
                 <div
@@ -34,15 +43,6 @@
                     <span :class="`h-3 w-3 ${item.color} rounded-full`"></span>
                     <span class="text-sm">{{ item.name }}</span>
                 </div>
-            </div>
-            <div
-                class="flex items-center space-x-2 cursor-pointer text-sm"
-                @click="showForm(item.name)">
-                <component
-                    class="h-5 w-5 stroke-2"
-                    :is="Icons['PlusCircleIcon']"
-                    v-if="item.subList.length > 0 && subListsOpen.includes(item.label)"></component>
-                <span>Add {{ item.name }}</span>
             </div>
         </div>
     </div>
@@ -79,15 +79,15 @@
 
                 <!-- Name field -->
                 <Input
-                    v-model="taskRecord.title"
+                    v-model="taskRecord.name"
                     placeholder="Title"
                     class="col-span-2" />
 
                 <!-- Name field error-->
                 <div
-                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.title"
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.name"
                     class="col-span-2 text-xs text-red-500">
-                    <div v-for="error in apiResponse.data.title">{{ error }}</div>
+                    <div v-for="error in apiResponse.data.name">{{ error }}</div>
                 </div>
 
                 <span class="inline-block align-baseline text-gray-400 font-bold text-xs mb-0 pl-1">Start date</span>
@@ -463,6 +463,45 @@ const isOpen = ref(false)
 
 const selectedForm = ref("tag")
 
+const tasks = ref([])
+const tags = ref([])
+const projects = ref([])
+const categories = ref([])
+const priorities = ref([])
+const statuses = ref([])
+
+const navItems = ref([
+    { label: "Plan", icon: "CalendarIcon", subList: [] },
+    {
+        label: "Task List",
+        name: "task",
+        icon: "ClipboardDocumentListIcon",
+        subList: projects
+    },
+    {
+        label: "Projects",
+        name: "project",
+        icon: "FolderIcon",
+        subList: projects
+    },
+    {
+        label: "Tags",
+        name: "tag",
+        icon: "TagIcon",
+        subList: tags
+    },
+    {
+        label: "Members",
+        name: "member",
+        icon: "UserGroupIcon",
+        subList: [
+            { name: "Prototype", color: "bg-purple-600" },
+            { name: "Research", color: "bg-green-600" },
+            { name: "Testing", color: "bg-yellow-400" }
+        ]
+    }
+])
+
 provide("isOpenSideModal", isOpen)
 
 const openCloseSublists = (subList) => {
@@ -496,7 +535,7 @@ const projectRecord = ref({
 })
 const taskRecord = ref({
     project_id: "",
-    title: "",
+    name: "",
     color: "bg-purple-600",
     priority_id: "",
     category_id: "",
@@ -548,29 +587,37 @@ async function taskStore() {
     }
 }
 
-const projects = ref([])
-ProjectServices.Fetch(projectRecord.value).then((response) => {
+TaskServices.Fetch().then((response) => {
+    if (response.status == "success") {
+        tasks.value = response.data
+    }
+})
+
+TagServices.Fetch().then((response) => {
+    if (response.status == "success") {
+        tags.value = response.data
+    }
+})
+
+ProjectServices.Fetch().then((response) => {
     if (response.status == "success") {
         projects.value = response.data
     }
 })
 
-const categories = ref([])
-CategoryServices.Fetch(projectRecord.value).then((response) => {
+CategoryServices.Fetch().then((response) => {
     if (response.status == "success") {
         categories.value = response.data
     }
 })
 
-const priorities = ref([])
-PriorityServices.Fetch(projectRecord.value).then((response) => {
+PriorityServices.Fetch().then((response) => {
     if (response.status == "success") {
         priorities.value = response.data
     }
 })
 
-const statuses = ref([])
-StatusServices.Fetch(projectRecord.value).then((response) => {
+StatusServices.Fetch().then((response) => {
     if (response.status == "success") {
         statuses.value = response.data
     }

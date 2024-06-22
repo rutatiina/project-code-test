@@ -32,7 +32,7 @@ class TaskController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'project_id' => 'required|numeric',
-            'title' => 'required|max:255',
+            'name' => 'required|max:255',
             'color' => 'required|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
@@ -52,8 +52,8 @@ class TaskController extends Controller
 
         $record = new Task();
         $record->project_id = $request->project_id;
-        $record->title = $request->title;
-        $record->slug = Str::of($request->title)->slug('-');
+        $record->name = $request->name;
+        $record->slug = Str::of($request->name)->slug('-');
         $record->start_date = $request->start_date;
         $record->end_date = $request->end_date;
         $record->category_id = $request->category_id;
@@ -94,7 +94,7 @@ class TaskController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:categories,id',
-            'title' => 'required|max:255',
+            'name' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -107,8 +107,8 @@ class TaskController extends Controller
 
         $record = Task::find($record);
         $record->project_id = $request->project_id;
-        $record->title = $request->title;
-        $record->slug = Str::of($request->title)->slug('-');
+        $record->name = $request->name;
+        $record->slug = Str::of($request->name)->slug('-');
         $record->start_date = $request->start_date;
         $record->end_date = $request->end_date;
         $record->category_id = $request->category_id;

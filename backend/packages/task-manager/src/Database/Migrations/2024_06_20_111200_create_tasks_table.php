@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('project_id');
             $table->json('tags')->nullable()->default("[]"); //primary or default tag of the post
-            $table->string('title');
+            $table->string('name');
             $table->string('slug');
             $table->unsignedBigInteger('priority_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();

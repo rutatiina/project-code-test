@@ -54,11 +54,11 @@ class ProjectsSeeder extends Seeder
                 $category = Category::inRandomOrder()->first();
                 $priority = Priority::inRandomOrder()->first();
                 $status = Status::inRandomOrder()->first();
-                $taskTitle = fake()->text(50);
+                $taskName = fake()->text(50);
                 $tasks[] = [
                     'project_id' => $project->id,
-                    'title' => $taskTitle,
-                    'slug' => Str::of($taskTitle)->slug('-'),
+                    'name' => $taskName,
+                    'slug' => Str::of($taskName)->slug('-'),
                     'description' => fake()->text(200),
                     'start_date' => fake()->dateTimeBetween('-30 days', 'now')->format('Y-m-d'),
                     'end_date' => fake()->dateTimeBetween('+10 days', '+100 days')->format('Y-m-d'),

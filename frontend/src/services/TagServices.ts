@@ -15,6 +15,15 @@ export async function Store(record) {
     }
 }
 
-// export function Me() {
-//     return axiosInstance.get(baseApiUrl + "/posts/user")
-// }
+export async function Fetch() {
+    try {
+        const response = await axios.get("/tags")
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return {
+            status: "error",
+            data: { error }
+        }
+    }
+}
