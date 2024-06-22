@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);
 
             $table->unsignedBigInteger('project_id');
-            $table->json('tag')->nullable()->default("[]"); //primary or default tag of the post
+            $table->json('tags')->nullable()->default("[]"); //primary or default tag of the post
             $table->string('title');
             $table->string('slug');
             $table->unsignedBigInteger('priority_id')->nullable();

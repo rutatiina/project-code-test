@@ -55,50 +55,68 @@
                 v-if="selectedForm === 'task'">
                 <!-- Project filed -->
                 <select
-                    v-model="tagRecord.color"
-                    placeholder="Select a color"
+                    v-model="taskRecord.project_id"
+                    placeholder="Select project"
                     class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
                     <option
                         value=""
                         disabled>
                         Please select one
                     </option>
-                    <option v-for="project in projects">{{ project.name }}</option>
+                    <option
+                        v-for="project in projects"
+                        :value="project.id">
+                        {{ project.name }}
+                    </option>
                 </select>
 
                 <!-- Project field error -->
                 <div
-                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.project_id"
                     class="col-span-2 text-xs text-red-500">
-                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                    <div v-for="error in apiResponse.data.project_id">{{ error }}</div>
                 </div>
 
                 <!-- Name field -->
                 <Input
-                    v-model="tagRecord.name"
-                    placeholder="Name"
+                    v-model="taskRecord.title"
+                    placeholder="Title"
                     class="col-span-2" />
+
+                <!-- Name field error-->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.title"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.title">{{ error }}</div>
+                </div>
 
                 <span class="inline-block align-baseline text-gray-400 font-bold text-xs mb-0 pl-1">Start date</span>
                 <span class="inline-block align-baseline text-gray-400 font-bold text-xs mb-0 pl-1">End date</span>
                 <Input
+                    v-model="taskRecord.start_date"
                     placeholder="Start Date"
                     class="mt-0"
                     type="date" />
                 <Input
+                    v-model="taskRecord.end_date"
                     placeholder="End Date"
                     type="date" />
 
                 <!-- Name field error-->
                 <div
-                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.name"
-                    class="col-span-2 text-xs text-red-500">
-                    <div v-for="error in apiResponse.data.name">{{ error }}</div>
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.start_date"
+                    class="col-span-1 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.start_date">{{ error }}</div>
+                </div>
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.end_date"
+                    class="col-span-1 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.end_date">{{ error }}</div>
                 </div>
 
                 <!-- start: category -->
                 <select
-                    v-model="tagRecord.color"
+                    v-model="taskRecord.category_id"
                     placeholder="Select a color"
                     class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
                     <option
@@ -106,19 +124,23 @@
                         disabled>
                         Please select one
                     </option>
-                    <option v-for="category in categories">{{ category.name }}</option>
+                    <option
+                        v-for="category in categories"
+                        :value="category.id">
+                        {{ category.name }}
+                    </option>
                 </select>
 
                 <div
-                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.category_id"
                     class="col-span-2 text-xs text-red-500">
-                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                    <div v-for="error in apiResponse.data.category_id">{{ error }}</div>
                 </div>
                 <!-- end: category field -->
 
                 <!-- start: priorities -->
                 <select
-                    v-model="tagRecord.color"
+                    v-model="taskRecord.priority_id"
                     placeholder="Select a color"
                     class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
                     <option
@@ -126,19 +148,23 @@
                         disabled>
                         Please select one
                     </option>
-                    <option v-for="priority in priorities">{{ priority.name }}</option>
+                    <option
+                        v-for="priority in priorities"
+                        :value="priority.id">
+                        {{ priority.name }}
+                    </option>
                 </select>
 
                 <div
-                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.priority_id"
                     class="col-span-2 text-xs text-red-500">
-                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                    <div v-for="error in apiResponse.data.priority_id">{{ error }}</div>
                 </div>
                 <!-- end: priorities field -->
 
                 <!-- start: status -->
                 <select
-                    v-model="tagRecord.color"
+                    v-model="taskRecord.status_id"
                     placeholder="Select a color"
                     class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
                     <option
@@ -146,19 +172,23 @@
                         disabled>
                         Please select one
                     </option>
-                    <option v-for="status in statuses">{{ status.name }}</option>
+                    <option
+                        v-for="status in statuses"
+                        :value="status.id">
+                        {{ status.name }}
+                    </option>
                 </select>
 
                 <div
-                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.status_id"
                     class="col-span-2 text-xs text-red-500">
-                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                    <div v-for="error in apiResponse.data.status_id">{{ error }}</div>
                 </div>
                 <!-- end: status field -->
 
                 <!-- Description field -->
                 <TextArea
-                    v-model="tagRecord.description"
+                    v-model="taskRecord.description"
                     rows="5"
                     placeholder="Description"
                     class="col-span-2" />
@@ -169,8 +199,9 @@
                     class="col-span-2 text-xs text-red-500">
                     <div v-for="error in apiResponse.data.description">{{ error }}</div>
                 </div>
+
                 <Button
-                    @click.prevent="tagStore"
+                    @click.prevent="taskStore"
                     label="Add new task"
                     icon="PlusIcon"
                     color="bg-lime-500 text-white col-span-2"
@@ -406,13 +437,13 @@
 
 <script setup>
 import { ref, provide } from "vue"
-import axios from "axios"
 import * as Icons from "@heroicons/vue/24/outline"
 import * as TagServices from "../../services/TagServices"
 import * as ProjectServices from "../../services/ProjectServices"
 import * as CategoryServices from "../../services/CategoryServices"
 import * as PriorityServices from "../../services/PriorityServices"
 import * as StatusServices from "../../services/StatusServices"
+import * as TaskServices from "../../services/TaskServices"
 import Modal from "./Modal.vue"
 import Input from "./Input.vue"
 import Button from "./Button.vue"
@@ -463,6 +494,17 @@ const projectRecord = ref({
     color: "bg-purple-600",
     description: ""
 })
+const taskRecord = ref({
+    project_id: "",
+    title: "",
+    color: "bg-purple-600",
+    priority_id: "",
+    category_id: "",
+    status_id: "",
+    start_date: "",
+    end_date: "",
+    description: ""
+})
 
 async function tagStore() {
     const response = await TagServices.Store(tagRecord.value)
@@ -485,6 +527,20 @@ async function projectStore() {
     if (response.status == "success") {
         //reset the projectRecord
         projectRecord.value = {
+            name: "",
+            color: "bg-purple-600",
+            description: ""
+        }
+    }
+}
+
+async function taskStore() {
+    const response = await TaskServices.Store(taskRecord.value)
+    apiResponse.value = response
+
+    if (response.status == "success") {
+        //reset the tagRecord
+        tagRecord.value = {
             name: "",
             color: "bg-purple-600",
             description: ""
