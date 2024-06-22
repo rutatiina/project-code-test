@@ -41,7 +41,7 @@ class ProjectsSeeder extends Seeder
             $project = Project::create([
                 'id' => ++$key,
                 'name' => $item["name"],
-                'slug' => Str::of($item)->slug('-'),
+                'slug' => Str::of($item["name"])->slug('-'),
                 'color' => $item["color"],
                 'description' => fake()->text(200)
             ]);
@@ -60,6 +60,8 @@ class ProjectsSeeder extends Seeder
                     'title' => $taskTitle,
                     'slug' => Str::of($taskTitle)->slug('-'),
                     'description' => fake()->text(200),
+                    'start_date' => fake()->dateTimeBetween('-30 days', 'now')->format('Y-m-d'),
+                    'end_date' => fake()->dateTimeBetween('+10 days', '+100 days')->format('Y-m-d'),
                     'category_id' => $category->id,
                     'priority_id' => $priority->id,
                     'status_id' => $status->id

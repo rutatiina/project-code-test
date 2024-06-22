@@ -33,7 +33,7 @@ class TagsSeeder extends Seeder
             Tag::create([
                 'id' => ++$key,
                 'name' => $item["name"],
-                'slug' => Str::of($item)->slug('-'),
+                'slug' => Str::of($item["name"])->slug('-'),
                 'color' => $item["color"],
                 'description' => fake()->text(200)
             ]);

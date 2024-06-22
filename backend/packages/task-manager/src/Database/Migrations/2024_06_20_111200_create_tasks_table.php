@@ -26,6 +26,8 @@ return new class extends Migration
             $table->unsignedBigInteger('priority_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('status_id')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->string('description')->nullable();
 
             //relationships

@@ -79,8 +79,11 @@
                     placeholder="Name"
                     class="col-span-2" />
 
+                <span class="inline-block align-baseline text-gray-400 font-bold text-xs mb-0 pl-1">Start date</span>
+                <span class="inline-block align-baseline text-gray-400 font-bold text-xs mb-0 pl-1">End date</span>
                 <Input
                     placeholder="Start Date"
+                    class="mt-0"
                     type="date" />
                 <Input
                     placeholder="End Date"
@@ -93,27 +96,65 @@
                     <div v-for="error in apiResponse.data.name">{{ error }}</div>
                 </div>
 
-                <!-- Color filed -->
+                <!-- start: category -->
                 <select
                     v-model="tagRecord.color"
                     placeholder="Select a color"
-                    class="col-span-2 w-full h-12 border p-2 rounded text-xs">
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
                     <option
                         value=""
                         disabled>
                         Please select one
                     </option>
-                    <option value="bg-purple-600">Purple</option>
-                    <option value="bg-green-600">Green</option>
-                    <option value="bg-yellow-400">Yellow</option>
+                    <option v-for="category in categories">{{ category.name }}</option>
                 </select>
 
-                <!-- Color field error -->
                 <div
                     v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
                     class="col-span-2 text-xs text-red-500">
                     <div v-for="error in apiResponse.data.color">{{ error }}</div>
                 </div>
+                <!-- end: category field -->
+
+                <!-- start: priorities -->
+                <select
+                    v-model="tagRecord.color"
+                    placeholder="Select a color"
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                    <option
+                        value=""
+                        disabled>
+                        Please select one
+                    </option>
+                    <option v-for="priority in priorities">{{ priority.name }}</option>
+                </select>
+
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                </div>
+                <!-- end: priorities field -->
+
+                <!-- start: status -->
+                <select
+                    v-model="tagRecord.color"
+                    placeholder="Select a color"
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                    <option
+                        value=""
+                        disabled>
+                        Please select one
+                    </option>
+                    <option v-for="status in statuses">{{ status.name }}</option>
+                </select>
+
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                </div>
+                <!-- end: status field -->
 
                 <!-- Description field -->
                 <TextArea
