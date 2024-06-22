@@ -37,13 +37,17 @@
         <div
             class="w-1/4 border-r flex-shrink-0 text-xs overflow-auto"
             v-for="status in statuses"
-            :key="status.id">
+            ref="statusRefs"
+            :key="status.id"
+            @drop="onDragEnter($event, status)"
+            @dragover.prevent
+            @dragenter.prevent>
             <div class="text-center font-bold pt-4 uppercase">{{ status.name }}</div>
             <!-- <Card draggable="true" @dragstart="hide(`card-${status.name}`)" :id="`card-${status.name}`" v-for="card in cards.filter((el) => el.status === status.name)" /> -->
             <div
                 class="m-2 p-5 bg-white rounded-lg h-auto border shadow"
                 draggable="true"
-                @dragstart="changeStatus(task.id)"
+                @dragstart="dragStart(task)"
                 :id="task.id"
                 v-for="task in tasks.filter((el) => el.status.slug === status.slug)"
                 :key="task">
@@ -71,7 +75,7 @@
     </div>
 </template>
 <script setup>
-import { ref, reactive } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { Switch } from "@headlessui/vue"
 import {
     ArrowsPointingInIcon, //
@@ -119,13 +123,14 @@ const cards = ref([
 
 const columns = ref(["to-do", "refined", "verified", "doing", "done"])
 
-const changeStatus = (id) => {
-    setTimeout(() => {
-        document.getElementById(id).style.display = "none"
-    }, 0)
-}
 const statuses = ref([])
 const tasks = ref([])
+const statusRefs = ref([])
+const taskDragged = ref([])
+
+const dragStart = (task) => {
+    taskDragged.value = task
+}
 
 StatusServices.Fetch().then((response) => {
     if (response.status == "success") {
@@ -138,6 +143,19 @@ TaskServices.Fetch().then((response) => {
         tasks.value = response.data
     }
 })
+
+function onDragEnter(event, status) {
+    console.log("========== task has been dragged in -=====")
+    console.log(event)
+    console.log(status.id)
+
+    //find the task being dragged and update its status
+    var foundIndex = tasks.value.findIndex((t) => t.id == taskDragged.value.id)
+    tasks.value[foundIndex].status_id = status.id
+    tasks.value[foundIndex].status = status
+}
+
+onMounted(() => console.log(statusRefs.value))
 </script>
 
 <style scoped></style>
