@@ -15,16 +15,26 @@ class TagsSeeder extends Seeder
     public function run(): void
     {
         $items = [
-            "Prototype",
-            "Research",
-            "Testing",
+            [
+                "name" => "Prototype",
+                "color" => "bg-purple-600",
+            ],
+            [
+                "name" => "Research",
+                "color" => "bg-green-600",
+            ],
+            [
+                "name" => "Testing",
+                "color" => "bg-yellow-400",
+            ],
         ];
 
         foreach ($items as $key => $item) {
             Tag::create([
                 'id' => ++$key,
-                'name' => $item,
+                'name' => $item["name"],
                 'slug' => Str::of($item)->slug('-'),
+                'color' => $item["color"],
                 'description' => fake()->text(200)
             ]);
         }

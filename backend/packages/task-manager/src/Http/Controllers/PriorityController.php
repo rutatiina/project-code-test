@@ -4,13 +4,17 @@ namespace ProjectCode\TaskManager\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use ProjectCode\TaskManager\Models\Priority;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class PriorityController extends Controller
 {
     /**
-     * Show the profile for a given user.
+     * fetch records.
+     * GET - api/categories
      */
-    public function index(string $id)
+    public function index()
     {
         $records = Priority::get();
         $response = [
@@ -21,34 +25,111 @@ class PriorityController extends Controller
     }
 
     /**
-     * Show the profile for a given user.
+     * store record.
+     * POST - api/categories
      */
-    public function store(string $id): array
+    public function store(Request $request)
     {
-        return [];
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'color' => 'required|max:255',
+            'description' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                "status" => "error",
+                "data" => $validator->errors(),
+            ];
+            return response()->json($response);
+        }
+
+        $record = new Priority();
+        $record->name = $request["name"];
+        $record->slug = Str::of($request["name"])->slug('-');
+        $record->description = $request["description"];
+        $record->save();
+        $record = $record->fresh();
+
+        $response = [
+            "status" => "success",
+            "data" => $record,
+        ];
+        return response()->json($response);
     }
 
     /**
-     * show given record
+     * show record
+     * GET - api/categories/{Tag}
      */
-    public function show(string $id): array
+    public function show(string $id)
     {
-        return [];
+        $record = Priority::find($id);
+        $response = [
+            "status" => "success",
+            "data" => $record,
+        ];
+        return response()->json($response);
     }
 
     /**
-     * edit / update given record.
+     * edit / update record.
+     * PATCH - api/categories/{tag}
      */
-    public function update(string $id): array
+    public function update(Request $request, string $tag)
     {
-        return [];
+        $request->request->add(['id' => $tag]);
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:categories,id',
+            'name' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                "status" => "error",
+                "data" => $validator->errors(),
+            ];
+            return response()->json($response);
+        }
+
+        $record = Priority::find($tag);
+        $record->name = $request->name;
+        $record->slug = Str::of($request->name)->slug('-');
+        $record->description = $request->description;
+        $record->save();
+        $record = $record->fresh();
+
+        $response = [
+            "status" => "success",
+            "data" => $record,
+        ];
+        return response()->json($response);
     }
 
     /**
-     * destroy given record.
+     * destroy record.
+     * DELETE - api/categories/{tag}
      */
-    public function destroy(string $id): array
+    public function destroy(string $id)
     {
-        return [];
+        $record = Priority::find($id);
+
+        if (!$record) {
+            $response = [
+                "status" => "error",
+                "data" => [
+                    "Record does not exist"
+                ],
+            ];
+            return response()->json($response);
+        }
+
+        $record->delete();
+        $response = [
+            "status" => "success",
+            "data" => [],
+        ];
+        return response()->json($response);
     }
 }

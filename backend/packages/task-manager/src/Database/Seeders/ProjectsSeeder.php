@@ -19,17 +19,30 @@ class ProjectsSeeder extends Seeder
     {
 
         $items = [
-            "Meridian " . fake()->name(),
-            "Risen " . fake()->name(),
-            "Skillbox " . fake()->name(),
-            "Strata insurance " . fake()->name(),
+            [
+                "name" => "Meridian " . fake()->name(),
+                "color" => "bg-rose-600"
+            ],
+            [
+                "name" => "Risen " . fake()->name(),
+                "color" => "bg-blue-600"
+            ],
+            [
+                "name" => "Skillbox " . fake()->name(),
+                "color" => "bg-yellow-400"
+            ],
+            [
+                "name" => "Strata insurance " . fake()->name(),
+                "color" => "bg-green-600"
+            ],
         ];
 
         foreach ($items as $key => $item) {
             $project = Project::create([
                 'id' => ++$key,
-                'name' => $item,
+                'name' => $item["name"],
                 'slug' => Str::of($item)->slug('-'),
+                'color' => $item["color"],
                 'description' => fake()->text(200)
             ]);
 

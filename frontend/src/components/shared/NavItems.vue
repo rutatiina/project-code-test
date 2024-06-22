@@ -53,51 +53,159 @@
             <form
                 class="grid grid-cols-2 gap-2 -space-y-0"
                 v-if="selectedForm === 'task'">
+                <!-- Project filed -->
+                <select
+                    v-model="tagRecord.color"
+                    placeholder="Select a color"
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                    <option
+                        value=""
+                        disabled>
+                        Please select one
+                    </option>
+                    <option v-for="project in projects">{{ project.name }}</option>
+                </select>
+
+                <!-- Project field error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                </div>
+
+                <!-- Name field -->
                 <Input
-                    placeholder="Title"
+                    v-model="tagRecord.name"
+                    placeholder="Name"
                     class="col-span-2" />
+
                 <Input
                     placeholder="Start Date"
                     type="date" />
                 <Input
                     placeholder="End Date"
                     type="date" />
-                <Input
-                    placeholder="Priority"
-                    class="col-span-2" />
-                <TextArea
-                    rows="5"
-                    placeholder="Description"
-                    class="col-span-2" />
-                <TextArea
-                    rows="5"
-                    placeholder="Members"
-                    class="col-span-2" />
-                <Button
-                    label="Add new task"
-                    icon="PlusIcon"
-                    color="bg-lime-500 text-white col-span-2"
-                    size="xl" />
-            </form>
-            <form
-                class="grid grid-cols-2 gap-2 -space-y-0"
-                v-if="selectedForm === 'tag'">
-                <Input
-                    v-model="tagRecord.name"
-                    placeholder="Name"
-                    class="col-span-2" />
 
+                <!-- Name field error-->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.name"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.name">{{ error }}</div>
+                </div>
+
+                <!-- Color filed -->
+                <select
+                    v-model="tagRecord.color"
+                    placeholder="Select a color"
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs">
+                    <option
+                        value=""
+                        disabled>
+                        Please select one
+                    </option>
+                    <option value="bg-purple-600">Purple</option>
+                    <option value="bg-green-600">Green</option>
+                    <option value="bg-yellow-400">Yellow</option>
+                </select>
+
+                <!-- Color field error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                </div>
+
+                <!-- Description field -->
                 <TextArea
                     v-model="tagRecord.description"
                     rows="5"
                     placeholder="Description"
                     class="col-span-2" />
+
+                <!-- Description field Error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.description"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.description">{{ error }}</div>
+                </div>
                 <Button
                     @click.prevent="tagStore"
                     label="Add new task"
                     icon="PlusIcon"
                     color="bg-lime-500 text-white col-span-2"
                     size="xl" />
+
+                <!-- Tag creation success message -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'success'"
+                    class="col-span-2 text-s text-green-600 py-5">
+                    Task create successfully
+                </div>
+            </form>
+            <form
+                class="grid grid-cols-2 gap-2 -space-y-0"
+                v-if="selectedForm === 'tag'">
+                <!-- Name field -->
+                <Input
+                    v-model="tagRecord.name"
+                    placeholder="Name"
+                    class="col-span-2" />
+
+                <!-- Name field error-->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.name"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.name">{{ error }}</div>
+                </div>
+
+                <!-- Color filed -->
+                <select
+                    v-model="tagRecord.color"
+                    placeholder="Select a color"
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs">
+                    <option
+                        value=""
+                        disabled>
+                        Please select one
+                    </option>
+                    <option value="bg-purple-600">Purple</option>
+                    <option value="bg-green-600">Green</option>
+                    <option value="bg-yellow-400">Yellow</option>
+                </select>
+
+                <!-- Color field error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                </div>
+
+                <!-- Description field -->
+                <TextArea
+                    v-model="tagRecord.description"
+                    rows="5"
+                    placeholder="Description"
+                    class="col-span-2" />
+
+                <!-- Description field Error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.description"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.description">{{ error }}</div>
+                </div>
+                <Button
+                    @click.prevent="tagStore"
+                    label="Add new task"
+                    icon="PlusIcon"
+                    color="bg-lime-500 text-white col-span-2"
+                    size="xl" />
+
+                <!-- Tag creation success message -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'success'"
+                    class="col-span-2 text-s text-green-600 py-5">
+                    Tag create successfully
+                </div>
             </form>
             <form
                 class="grid grid-cols-2 gap-2 -space-y-0"
@@ -160,31 +268,67 @@
             <form
                 class="grid grid-cols-2 gap-2 -space-y-0"
                 v-if="selectedForm === 'project'">
+                <!-- Name field -->
                 <Input
-                    placeholder="Title"
+                    v-model="projectRecord.name"
+                    placeholder="Name"
                     class="col-span-2" />
-                <Input
-                    placeholder="Start Date"
-                    type="date" />
-                <Input
-                    placeholder="End Date"
-                    type="date" />
-                <Input
-                    placeholder="Priority"
-                    class="col-span-2" />
+
+                <!-- Name field error-->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.name"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.name">{{ error }}</div>
+                </div>
+
+                <!-- Color filed -->
+                <select
+                    v-model="projectRecord.color"
+                    placeholder="Select a color"
+                    class="col-span-2 w-full h-12 border p-2 rounded text-xs">
+                    <option
+                        value=""
+                        disabled>
+                        Please select one
+                    </option>
+                    <option value="bg-purple-600">Purple</option>
+                    <option value="bg-green-600">Green</option>
+                    <option value="bg-yellow-400">Yellow</option>
+                </select>
+
+                <!-- Color field error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.color"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.color">{{ error }}</div>
+                </div>
+
+                <!-- Description field -->
                 <TextArea
+                    v-model="projectRecord.description"
                     rows="5"
                     placeholder="Description"
                     class="col-span-2" />
-                <TextArea
-                    rows="5"
-                    placeholder="Members"
-                    class="col-span-2" />
+
+                <!-- Description field Error -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.description"
+                    class="col-span-2 text-xs text-red-500">
+                    <div v-for="error in apiResponse.data.description">{{ error }}</div>
+                </div>
                 <Button
+                    @click.prevent="projectStore"
                     label="Add new task"
                     icon="PlusIcon"
                     color="bg-lime-500 text-white col-span-2"
                     size="xl" />
+
+                <!-- Tag creation success message -->
+                <div
+                    v-if="apiResponse.data && apiResponse.status == 'success'"
+                    class="col-span-2 text-s text-green-600 py-5">
+                    Project create successfully
+                </div>
             </form>
             <form
                 class="grid grid-cols-2 gap-2 -space-y-0"
@@ -223,6 +367,11 @@
 import { ref, provide } from "vue"
 import axios from "axios"
 import * as Icons from "@heroicons/vue/24/outline"
+import * as TagServices from "../../services/TagServices"
+import * as ProjectServices from "../../services/ProjectServices"
+import * as CategoryServices from "../../services/CategoryServices"
+import * as PriorityServices from "../../services/PriorityServices"
+import * as StatusServices from "../../services/StatusServices"
 import Modal from "./Modal.vue"
 import Input from "./Input.vue"
 import Button from "./Button.vue"
@@ -256,28 +405,97 @@ const showForm = (form) => {
     isOpen.value = true
     selectedForm.value = form
     console.log(form, isOpen.value)
+
+    //clear any api response data
+    apiResponse.value = {}
 }
 
 ///////////////////////
-
+var apiResponse = ref({})
 const tagRecord = ref({
     name: "",
+    color: "bg-purple-600",
+    description: ""
+})
+const projectRecord = ref({
+    name: "",
+    color: "bg-purple-600",
     description: ""
 })
 
-const tagStore = async () => {
-    try {
-        const response = await axios.post("/tags", tagRecord.value)
-        // Handle successful response (optional)
-        console.log("Data submitted successfully:", response.data)
-    } catch (error) {
-        console.log(error)
-        // isError.value = true
-        // error.value = error.message || "An error occurred."
-    } finally {
-        // Optional cleanup or reset after submission
+async function tagStore() {
+    const response = await TagServices.Store(tagRecord.value)
+    apiResponse.value = response
+
+    if (response.status == "success") {
+        //reset the tagRecord
+        tagRecord.value = {
+            name: "",
+            color: "bg-purple-600",
+            description: ""
+        }
     }
 }
+
+async function projectStore() {
+    const response = await ProjectServices.Store(projectRecord.value)
+    apiResponse.value = response
+
+    if (response.status == "success") {
+        //reset the projectRecord
+        projectRecord.value = {
+            name: "",
+            color: "bg-purple-600",
+            description: ""
+        }
+    }
+}
+
+const projects = ref([])
+ProjectServices.Fetch(projectRecord.value).then((response) => {
+    if (response.status == "success") {
+        projects.value = response.data
+    }
+})
+
+const categories = ref([])
+CategoryServices.Fetch(projectRecord.value).then((response) => {
+    if (response.status == "success") {
+        categories.value = response.data
+    }
+})
+
+const priorities = ref([])
+PriorityServices.Fetch(projectRecord.value).then((response) => {
+    if (response.status == "success") {
+        priorities.value = response.data
+    }
+})
+
+const statuses = ref([])
+StatusServices.Fetch(projectRecord.value).then((response) => {
+    if (response.status == "success") {
+        statuses.value = response.data
+    }
+})
 </script>
 
-<style></style>
+<style>
+select {
+    /* reset */
+
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+select.minimal {
+    background-image: linear-gradient(45deg, transparent 50%, gray 50%), linear-gradient(135deg, gray 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
+    background-position: calc(100% - 20px) calc(1.5em + 3px), calc(100% - 15px) calc(1.5em + 3px), calc(100% - 2.5em) 0.5em;
+    background-size: 5px 5px, 5px 5px, 2px 3em;
+    background-repeat: no-repeat;
+}
+</style>

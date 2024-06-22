@@ -32,6 +32,8 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
+            'color' => 'required|max:255',
+            'description' => 'required|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -58,7 +60,7 @@ class CategoryController extends Controller
 
     /**
      * show record
-     * GET - api/categories/{category}
+     * GET - api/categories/{Tag}
      */
     public function show(string $id)
     {
@@ -72,11 +74,11 @@ class CategoryController extends Controller
 
     /**
      * edit / update record.
-     * PATCH - api/categories/{category}
+     * PATCH - api/categories/{tag}
      */
-    public function update(Request $request, string $category)
+    public function update(Request $request, string $tag)
     {
-        $request->request->add(['id' => $category]);
+        $request->request->add(['id' => $tag]);
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:categories,id',
@@ -91,7 +93,7 @@ class CategoryController extends Controller
             return response()->json($response);
         }
 
-        $record = Category::find($category);
+        $record = Category::find($tag);
         $record->name = $request->name;
         $record->slug = Str::of($request->name)->slug('-');
         $record->description = $request->description;
@@ -107,7 +109,7 @@ class CategoryController extends Controller
 
     /**
      * destroy record.
-     * DELETE - api/categories/{category}
+     * DELETE - api/categories/{tag}
      */
     public function destroy(string $id)
     {
