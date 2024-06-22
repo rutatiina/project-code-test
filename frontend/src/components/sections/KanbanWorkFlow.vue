@@ -36,26 +36,27 @@
     <div class="w-full h-full flex overflow-auto">
         <div
             class="w-1/4 border-r flex-shrink-0 text-xs overflow-auto"
-            v-for="column in columns"
-            :key="column">
-            <!-- <Card draggable="true" @dragstart="hide(`card-${column}`)" :id="`card-${column}`" v-for="card in cards.filter((el) => el.status === column)" /> -->
+            v-for="status in statuses"
+            :key="status.id">
+            <div class="text-center font-bold pt-4 uppercase">{{ status.name }}</div>
+            <!-- <Card draggable="true" @dragstart="hide(`card-${status.name}`)" :id="`card-${status.name}`" v-for="card in cards.filter((el) => el.status === status.name)" /> -->
             <div
                 class="m-2 p-5 bg-white rounded-lg h-auto border shadow"
                 draggable="true"
-                @dragstart="changeStatus(card.id)"
-                :id="card.id"
-                v-for="card in cards.filter((el) => el.status === column)"
-                :key="card">
+                @dragstart="changeStatus(task.id)"
+                :id="task.id"
+                v-for="task in tasks.filter((el) => el.status.slug === status.slug)"
+                :key="task">
                 <div class="flex items-center justify-between">
                     <div class="flex -space-x-4">
                         <div
                             class="h-10 w-10 rounded-full border-2 border-slate-500 bg-black"
-                            v-for="member in card.members"
+                            v-for="member in task.members"
                             :key="member"></div>
                     </div>
-                    <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold captalise">{{ card.priority }}</div>
+                    <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold captalise">{{ task.priority }}</div>
                 </div>
-                <div class="font-bold text-sm my-3">A/B Testing - Round 3</div>
+                <div class="font-bold text-sm my-3">{{ task.name }}</div>
                 <div class="flex items-center space-x-1 my-1 text-[10px]">
                     <div class="w-auto px-2 bg-blue-200 text-blue-600 py-0.5 rounded-full font-bold captalise">Prototype</div>
                     <div class="w-auto px-2 bg-green-200 text-green-600 py-0.5 rounded-full font-bold captalise">Research</div>
@@ -63,7 +64,7 @@
                 </div>
                 <div class="flex items-center space-x-2 text-slate-500 font-semibold mt-4 text-[10px]">
                     <CalendarIcon class="h-5 stroke-2" />
-                    <span>{{ card.date }}</span>
+                    <span>{{ task.date }}</span>
                 </div>
             </div>
         </div>
@@ -90,6 +91,8 @@ import Fab from "../shared/Fab.vue"
 import Tag from "../shared/Tag.vue"
 import Card from "../shared/Card.vue"
 import Calendar from "../shared/Calendar.vue"
+import * as StatusServices from "../../services/StatusServices"
+import * as TaskServices from "../../services/TaskServices"
 
 const enabled = ref(false)
 
@@ -121,6 +124,20 @@ const changeStatus = (id) => {
         document.getElementById(id).style.display = "none"
     }, 0)
 }
+const statuses = ref([])
+const tasks = ref([])
+
+StatusServices.Fetch().then((response) => {
+    if (response.status == "success") {
+        statuses.value = response.data
+    }
+})
+
+TaskServices.Fetch().then((response) => {
+    if (response.status == "success") {
+        tasks.value = response.data
+    }
+})
 </script>
 
 <style scoped></style>

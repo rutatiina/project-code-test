@@ -49,7 +49,7 @@ class ProjectsSeeder extends Seeder
             //seed the project with tasks
             $tasks = [];
 
-            for ($i = 1; $i <= 7; $i++) {
+            for ($i = 1; $i <= 4; $i++) {
                 //randommly get two categories
                 $category = Category::inRandomOrder()->first();
                 $priority = Priority::inRandomOrder()->first();
