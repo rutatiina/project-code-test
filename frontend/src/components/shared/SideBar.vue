@@ -5,16 +5,9 @@
       <Tag label="Add new task" icon="PlusIcon" />
       <Card/> -->
         <div class="font-bold text-lg">Task Master</div>
-        <Button
-            label="Add new task"
-            icon="PlusIcon"
-            color="bg-lime-300"
-            size="xl" />
 
-        <div class="space-y-4">
-            <!-- <NavItems :items="navItems" /> this is to be deleted -->
-            <NavItems />
-        </div>
+        <!-- <NavItems :items="navItems" /> this is to be deleted -->
+        <NavItems />
 
         <div class="fixed bottom-0 w-1/4 h-auto left-0 p-7 bg-lime-50 border-t border-r">
             <div class="flex items-center space-x-2 font-bold">
