@@ -453,8 +453,8 @@ const props = defineProps({
     name: [String, Number],
     label: [String, Number],
     icon: [String, Number],
-    subList: [Array, Object],
-    items: [Array, Object]
+    subList: [Array, Object]
+    // items: [Array, Object] //line to be deleted
 })
 
 const subListsOpen = ref([])

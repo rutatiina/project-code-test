@@ -5,11 +5,11 @@ namespace ProjectCode\TaskManager\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tag extends Model
+class Member extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'tags';
+    protected $table = 'members';
 
     protected $guarded = [];
 }

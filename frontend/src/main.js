@@ -9,6 +9,7 @@ import "./assets/main.css"
 
 //set the default base URL for axios calls
 axios.defaults.baseURL = "http://task-manager.test/api" // process.env.baseURL || process.env.apiUrl || ""
+// axios.defaults.withCredentials = true // process.env.baseURL || process.env.apiUrl || ""
 
 const app = createApp(App)
 

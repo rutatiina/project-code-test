@@ -54,17 +54,18 @@
                 <div class="flex items-center justify-between">
                     <div class="flex -space-x-4">
                         <div
-                            class="h-10 w-10 rounded-full border-2 border-slate-500 bg-black"
+                            class="h-10 w-10 rounded-full border-2 border-slate-500 text-center inline-block align-middle"
+                            :style="`background-image: url('https://picsum.photos/200/300?random=` + member.id + `')`"
                             v-for="member in task.members"
-                            :key="member"></div>
+                            :key="member.id"></div>
                     </div>
-                    <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold captalise">{{ task.priority }}</div>
+                    <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold capitalize">{{ task.priority.name }}</div>
                 </div>
                 <div class="font-bold text-sm my-3">{{ task.name }}</div>
                 <div class="flex items-center space-x-1 my-1 text-[10px]">
-                    <div class="w-auto px-2 bg-blue-200 text-blue-600 py-0.5 rounded-full font-bold captalise">Prototype</div>
-                    <div class="w-auto px-2 bg-green-200 text-green-600 py-0.5 rounded-full font-bold captalise">Research</div>
-                    <div class="w-auto px-2 bg-yellow-200 text-yellow-600 py-0.5 rounded-full font-bold captalise">Testing</div>
+                    <div class="w-auto px-2 bg-blue-200 text-blue-600 py-0.5 rounded-full font-bold capitalize">Prototype</div>
+                    <div class="w-auto px-2 bg-green-200 text-green-600 py-0.5 rounded-full font-bold capitalize">Research</div>
+                    <div class="w-auto px-2 bg-yellow-200 text-yellow-600 py-0.5 rounded-full font-bold capitalize">Testing</div>
                 </div>
                 <div class="flex items-center space-x-2 text-slate-500 font-semibold mt-4 text-[10px]">
                     <CalendarIcon class="h-5 stroke-2" />

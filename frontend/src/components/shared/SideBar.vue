@@ -12,7 +12,8 @@
             size="xl" />
 
         <div class="space-y-4">
-            <NavItems :items="navItems" />
+            <!-- <NavItems :items="navItems" /> this is to be deleted -->
+            <NavItems />
         </div>
 
         <div class="fixed bottom-0 w-1/4 h-auto left-0 p-7 bg-lime-50 border-t border-r">
@@ -46,6 +47,8 @@ import Tag from "./Tag.vue"
 import Card from "./Card.vue"
 import NavItems from "./NavItems.vue"
 
+/*
+//this commented code is to be deleted
 const navItems = [
     { label: "Plan", icon: "CalendarIcon", subList: [] },
     {
@@ -91,6 +94,7 @@ const navItems = [
         ]
     }
 ]
+*/
 </script>
 
 <style scoped></style>
