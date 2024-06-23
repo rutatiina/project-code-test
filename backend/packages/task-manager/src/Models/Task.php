@@ -17,11 +17,11 @@ class Task extends Model
 
     protected $guarded = [];
 
-    protected $with = ['status', 'members', 'priority'];
+    protected $with = ['status', 'members', 'priority', 'tags'];
     // protected $appends = ['members'];
 
     /**
-     * Get the phone associated with the user.
+     * Get the status associated with the task.
      */
     public function status(): HasOne
     {
@@ -29,22 +29,15 @@ class Task extends Model
     }
 
     /**
-     * Get the phone associated with the user.
+     * Get the phone priority with the task.
      */
     public function priority(): HasOne
     {
         return $this->hasOne(Priority::class, 'id', 'priority_id');
     }
 
-    // protected function members(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn () => [1, 2, 3, 4],
-    //     );
-    // }
-
     /**
-     * Get all of the members for the project.
+     * Get all of the members for the task.
      */
     public function members(): HasManyThrough
     {
@@ -65,11 +58,28 @@ class Task extends Model
         */
         return $this->hasManyThrough(
             User::class, //Deployment::class,
-            Member::class, //Environment::class,
+            TaskMember::class, //Environment::class,
             'task_id', // Foreign key on the members table...
             'id', // Foreign key on the users table...
             'id', // Local key on the task table...
             'user_id' // Local key on the member table...
+        );
+    }
+
+
+
+    /**
+     * Get all of the members for the task.
+     */
+    public function tags(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Tag::class, //Deployment::class,
+            TaskTag::class, //Environment::class,
+            'task_id', // Foreign key on the members table...
+            'id', // Foreign key on the users table...
+            'id', // Local key on the task table...
+            'tag_id' // Local key on the member table...
         );
     }
 }

@@ -7,9 +7,11 @@ use ProjectCode\TaskManager\Models\Task;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use ProjectCode\TaskManager\Models\Category;
-use ProjectCode\TaskManager\Models\Member;
+use ProjectCode\TaskManager\Models\TaskMember;
 use ProjectCode\TaskManager\Models\Priority;
 use ProjectCode\TaskManager\Models\Status;
+use ProjectCode\TaskManager\Models\Tag;
+use ProjectCode\TaskManager\Models\TaskTag;
 use ProjectCode\User\Models\User;
 
 class ProjectsSeeder extends Seeder
@@ -69,18 +71,27 @@ class ProjectsSeeder extends Seeder
                     'status_id' => $status->id
                 ]);
 
+                //create the task tags
+                $noOfTags = fake()->numberBetween(1, 3);
+                $tags = Tag::inRandomOrder()->limit($noOfTags)->get();
+                foreach ($tags as $tag) {
+
+                    TaskTag::create([
+                        'project_id' => $project->id,
+                        'task_id' => $task->id,
+                        'tag_id' => $tag->id,
+                    ]);
+                }
 
                 //create the task members
                 $noOfMembers = fake()->numberBetween(2, 5);
-                $members = [];
-                for ($i = 0; $i < $noOfMembers; $i++) {
-                    $user = User::whereNotIn('id', $members)->inRandomOrder()->first();
-                    Member::create([
+                $users = User::inRandomOrder()->limit($noOfMembers)->get();
+                foreach ($users as $user) {
+                    TaskMember::create([
                         'project_id' => $project->id,
                         'user_id' => $user->id,
                         'task_id' => $task->id,
                     ]);
-                    $members[] = $user->id;
                 }
             }
         }

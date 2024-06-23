@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('task_members', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
@@ -20,19 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);
 
             $table->unsignedBigInteger('project_id');
-            $table->string('name');
-            $table->string('slug');
-            $table->unsignedBigInteger('priority_id')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->unsignedBigInteger('status_id')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('description')->nullable();
-
-            //relationships
-            //- project
-            //- members (users)
-            //- tags
+            $table->unsignedBigInteger('task_id');
+            $table->unsignedBigInteger('user_id');
         });
     }
 
@@ -41,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('task_members');
     }
 };

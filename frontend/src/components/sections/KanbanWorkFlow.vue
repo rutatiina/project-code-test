@@ -63,9 +63,14 @@
                 </div>
                 <div class="font-bold text-sm my-3">{{ task.name }}</div>
                 <div class="flex items-center space-x-1 my-1 text-[10px]">
-                    <div class="w-auto px-2 bg-blue-200 text-blue-600 py-0.5 rounded-full font-bold capitalize">Prototype</div>
+                    <div
+                        v-for="tag in task.tags"
+                        :class="'w-auto px-2 bg-blue-200 text-blue-600 py-0.5 rounded-full font-bold capitalize'">
+                        {{ tag.name }}
+                    </div>
+                    <!-- <div class="w-auto px-2 bg-blue-200 text-blue-600 py-0.5 rounded-full font-bold capitalize">Prototype</div>
                     <div class="w-auto px-2 bg-green-200 text-green-600 py-0.5 rounded-full font-bold capitalize">Research</div>
-                    <div class="w-auto px-2 bg-yellow-200 text-yellow-600 py-0.5 rounded-full font-bold capitalize">Testing</div>
+                    <div class="w-auto px-2 bg-yellow-200 text-yellow-600 py-0.5 rounded-full font-bold capitalize">Testing</div> -->
                 </div>
                 <div class="flex items-center space-x-2 text-slate-500 font-semibold mt-4 text-[10px]">
                     <CalendarIcon class="h-5 stroke-2" />
