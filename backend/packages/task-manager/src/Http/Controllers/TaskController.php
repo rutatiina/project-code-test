@@ -93,8 +93,16 @@ class TaskController extends Controller
         $request->request->add(['id' => $record]);
 
         $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:categories,id',
-            'name' => 'required|max:255',
+            'id' => 'required|exists:tasks,id',
+            'project_id' => 'numeric',
+            'name' => 'max:255',
+            'color' => 'max:255',
+            'start_date' => 'date',
+            'end_date' => 'date',
+            'category_id' => 'numeric',
+            'status_id' => 'numeric',
+            'priority_id' => 'numeric',
+            'description' => 'max:255',
         ]);
 
         if ($validator->fails()) {
@@ -106,15 +114,15 @@ class TaskController extends Controller
         }
 
         $record = Task::find($record);
-        $record->project_id = $request->project_id;
-        $record->name = $request->name;
-        $record->slug = Str::of($request->name)->slug('-');
-        $record->start_date = $request->start_date;
-        $record->end_date = $request->end_date;
-        $record->category_id = $request->category_id;
-        $record->priority_id = $request->priority_id;
-        $record->status_id = $request->status_id;
-        $record->description = $request->description;
+        if ($request->project_id) $record->project_id = $request->project_id;
+        if ($request->name) $record->name = $request->name;
+        if ($request->name) $record->slug = Str::of($request->name)->slug('-');
+        if ($request->start_date) $record->start_date = $request->start_date;
+        if ($request->end_date) $record->end_date = $request->end_date;
+        if ($request->category_id) $record->category_id = $request->category_id;
+        if ($request->priority_id) $record->priority_id = $request->priority_id;
+        if ($request->status_id) $record->status_id = $request->status_id;
+        if ($request->description) $record->description = $request->description;
         $record->save();
         $record = $record->fresh();
 

@@ -39,7 +39,7 @@
             v-for="status in statuses"
             ref="statusRefs"
             :key="status.id"
-            @drop="onDragEnter($event, status)"
+            @drop="onDragEnter(status)"
             @dragover.prevent
             @dragenter.prevent>
             <div class="text-center font-bold pt-4 uppercase">{{ status.name }}</div>
@@ -144,15 +144,17 @@ TaskServices.Fetch().then((response) => {
     }
 })
 
-function onDragEnter(event, status) {
-    console.log("========== task has been dragged in -=====")
-    console.log(event)
-    console.log(status.id)
+function onDragEnter(status) {
+    TaskServices.Update(taskDragged.value.id, { status_id: status.id }).then((response) => {
+        if (response.status == "success") {
+            // tasks.value = response.data
 
-    //find the task being dragged and update its status
-    var foundIndex = tasks.value.findIndex((t) => t.id == taskDragged.value.id)
-    tasks.value[foundIndex].status_id = status.id
-    tasks.value[foundIndex].status = status
+            //find the task being dragged and update its status
+            var foundIndex = tasks.value.findIndex((t) => t.id == taskDragged.value.id)
+            tasks.value[foundIndex].status_id = status.id
+            tasks.value[foundIndex].status = status
+        }
+    })
 }
 
 onMounted(() => console.log(statusRefs.value))
