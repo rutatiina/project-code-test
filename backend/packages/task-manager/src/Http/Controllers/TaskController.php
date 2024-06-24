@@ -7,6 +7,7 @@ use ProjectCode\TaskManager\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use ProjectCode\TaskManager\Models\TaskMember;
 
 class TaskController extends Controller
 {
@@ -40,6 +41,8 @@ class TaskController extends Controller
             'status_id' => 'required|numeric',
             'priority_id' => 'required|numeric',
             'description' => 'required|max:255',
+            'members' => 'required|array',
+            'members.*' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -61,6 +64,17 @@ class TaskController extends Controller
         $record->status_id = $request->status_id;
         $record->description = $request->description;
         $record->save();
+        
+
+        //save the members
+        foreach($request->members as $userId) {
+            $recordMember = new TaskMember();
+            $recordMember->project_id = $request->project_id;
+            $recordMember->task_id = $record->id;
+            $recordMember->user_id = $userId;
+            $recordMember->save();
+        }
+
         $record = $record->fresh();
 
         $response = [

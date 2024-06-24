@@ -37,7 +37,7 @@
                         leave="transform transition ease-in-out duration-500"
                         leave-from="translate-x-full"
                         leave-to="-translate-x-full">
-                        <DialogPanel class="w-full max-w-md transform overflow-hidden absolute left-0 inset-y-0 bg-white p-6 text-left align-middle shadow-xl transition-all">
+                        <DialogPanel class="w-full max-w-md transform overflow-y-auto absolute left-0 inset-y-0 bg-white p-6 text-left align-middle shadow-xl transition-all">
                             <DialogTitle
                                 as="div"
                                 class="text-lg font-medium leading-6 text-gray-900 flex items-center justify-between">
