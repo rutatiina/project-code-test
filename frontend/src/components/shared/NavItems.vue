@@ -64,11 +64,12 @@
                     <select
                         v-model="taskRecord.project_id"
                         placeholder="Select project"
-                        class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                        class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal"
+                        :class="'col-span-2 w-full h-12 border p-2 rounded text-xs minimal ' + [taskRecord.project_id == '' ? 'text-gray-400' : '']">
                         <option
                             value=""
                             disabled>
-                            Please select one
+                            Please select Project
                         </option>
                         <option
                             v-for="project in projects"
@@ -124,12 +125,11 @@
                     <!-- start: category -->
                     <select
                         v-model="taskRecord.category_id"
-                        placeholder="Select a color"
-                        class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                        :class="'col-span-2 w-full h-12 border p-2 rounded text-xs minimal ' + [taskRecord.category_id == '' ? 'text-gray-400' : '']">
                         <option
                             value=""
                             disabled>
-                            Please select one
+                            Please select category
                         </option>
                         <option
                             v-for="category in categories"
@@ -148,12 +148,11 @@
                     <!-- start: priorities -->
                     <select
                         v-model="taskRecord.priority_id"
-                        placeholder="Select a color"
-                        class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                        :class="'col-span-2 w-full h-12 border p-2 rounded text-xs minimal ' + [taskRecord.priority_id == '' ? 'text-gray-400' : '']">
                         <option
                             value=""
                             disabled>
-                            Please select one
+                            Please select priority
                         </option>
                         <option
                             v-for="priority in priorities"
@@ -172,12 +171,11 @@
                     <!-- start: status -->
                     <select
                         v-model="taskRecord.status_id"
-                        placeholder="Select a color"
-                        class="col-span-2 w-full h-12 border p-2 rounded text-xs minimal">
+                        :class="'col-span-2 w-full h-12 border p-2 rounded text-xs minimal ' + [taskRecord.status_id == '' ? 'text-gray-400' : '']">
                         <option
                             value=""
                             disabled>
-                            Please select one
+                            Please select status
                         </option>
                         <option
                             v-for="status in statuses"
@@ -193,47 +191,79 @@
                     </div>
                     <!-- end: status field -->
 
-                    <!-- start: status -->
+                    <!-- start: members -->
                     <div class="col-span-2 w-full">
+                        <div class="font-bold text-sm my-2 ms-2 text-gray-500">Attached to:</div>
                         <ul class="list-decimal list-inside">
                             <li
-                                class="text-sm mb-2 bg-gray-100 py-2 px-3"
-                                v-for="user in users"
-                                :key="user.id">
-                                {{ user.name }}
+                                class="text-sm mb-2 bg-gray-100 py-2 px-3 relative"
+                                v-for="(member, key) in members"
+                                :key="member.id">
+                                {{ member.name }}
+
+                                <button
+                                    @click.prevent="removeMember(member.id)"
+                                    type="button"
+                                    class="h-full px-1 text-sm font-bold border-s-2 border-red-500 text-red-500 absolute top-0 right-0">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="2.5"
+                                        stroke="currentColor"
+                                        class="size-6">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </li>
                         </ul>
                     </div>
 
                     <div class="col-span-2 w-full align-top flex">
                         <select
+                            v-model="user"
                             placeholder="Select a color"
-                            class="grow border h-full p-2 w-auto rounded text-xs border-2 border-gray-500 minimal-small">
+                            :class="'grow border h-full p-2 w-auto rounded text-xs border-2 border-gray-500 minimal-small ' + [Object.keys(user).length == 0 ? 'text-gray-400' : '']">
                             <option
-                                value=""
+                                :value="{}"
                                 disabled>
-                                Please select one
+                                Choose member to attach
                             </option>
                             <option
                                 v-for="user in users"
-                                :value="user.id">
+                                :value="user">
                                 {{ user.name }}
                             </option>
                         </select>
                         <button
+                            @click.prevent="attachMember()"
                             type="button"
-                            class="flex-none px-4 h-full ml-1 rounded text-sm font-bold border-2 border-gray-500"
+                            class="flex-none px-2 h-full ml-1 rounded text-sm font-bold border-2 border-gray-500"
                             value="Assign">
-                            +
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="2.5"
+                                stroke="currentColor"
+                                class="size-6">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
                         </button>
                     </div>
 
                     <div
-                        v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.status_id"
+                        v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.members"
                         class="col-span-2 text-xs text-red-500">
-                        <div v-for="error in apiResponse.data.status_id">{{ error }}</div>
+                        <div v-for="error in apiResponse.data.members">{{ error }}</div>
                     </div>
-                    <!-- end: status field -->
+                    <!-- end: members field -->
 
                     <!-- Description field -->
                     <TextArea
@@ -521,6 +551,8 @@ const categories = ref([])
 const priorities = ref([])
 const statuses = ref([])
 const users = ref([])
+const members = ref([])
+const user = ref({})
 
 const navItems = ref([
     { label: "Plan", icon: "CalendarIcon", subList: [] },
@@ -594,8 +626,21 @@ const taskRecord = ref({
     status_id: "",
     start_date: "",
     end_date: "",
-    description: ""
+    description: "",
+    members: []
 })
+
+function attachMember() {
+    members.value.push(user.value)
+    taskRecord.value.members = members.value.map((m) => m.id)
+    user.value = {}
+}
+
+function removeMember(id) {
+    members.value = members.value.filter((m) => m.id !== id)
+    taskRecord.value.members = members.value.map((m) => m.id)
+    // delete members.value[key]
+}
 
 async function tagStore() {
     const response = await TagServices.Store(tagRecord.value)
