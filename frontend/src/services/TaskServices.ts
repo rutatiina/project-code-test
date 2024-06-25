@@ -40,3 +40,17 @@ export async function Update(id: number, data: object) {
         }
     }
 }
+
+export async function Delete(id: number) {
+    try {
+        const response = await axios.delete("/tasks/" + id)
+        // Handle successful response (optional)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return {
+            status: "error",
+            data: { error }
+        }
+    }
+}

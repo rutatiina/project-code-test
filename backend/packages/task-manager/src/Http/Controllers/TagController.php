@@ -45,9 +45,10 @@ class TagController extends Controller
         }
 
         $record = new Tag();
-        $record->name = $request["name"];
-        $record->slug = Str::of($request["name"])->slug('-');
-        $record->description = $request["description"];
+        $record->name = $request->name;
+        $record->slug = Str::of($request->name)->slug('-');
+        $record->description = $request->description;
+        $record->color = $request->color;
         $record->save();
         $record = $record->fresh();
 

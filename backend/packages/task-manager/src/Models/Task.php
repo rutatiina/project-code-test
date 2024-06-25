@@ -18,7 +18,7 @@ class Task extends Model
     protected $guarded = [];
 
     protected $with = ['status', 'members', 'priority', 'tags'];
-    // protected $appends = ['members'];
+    protected $appends = ['member_user_ids'];
 
     /**
      * Get the status associated with the task.
@@ -37,25 +37,23 @@ class Task extends Model
     }
 
     /**
+     * Interact with the user's address.
+     */
+    protected function memberUserIds(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                $members = $this->members();
+                return $members->pluck('user_id');
+            },
+        );
+    }
+
+    /**
      * Get all of the members for the task.
      */
     public function members(): HasManyThrough
     {
-        /*
-        tasks - projects
-            id - integer
-            name - string
-        
-        members - environments
-            id - integer
-            task_id - project_id - integer
-            name - string
-        
-        users - deployments
-            id - integer
-            environment_id - integer
-            commit_hash - string
-        */
         return $this->hasManyThrough(
             User::class, //Deployment::class,
             TaskMember::class, //Environment::class,

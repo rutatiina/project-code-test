@@ -191,13 +191,13 @@
                     </div>
                     <!-- end: status field -->
 
-                    <!-- start: members -->
+                    <!-- start: taskMembers -->
                     <div class="col-span-2 w-full">
                         <div class="font-bold text-sm my-2 ms-2 text-gray-500">Attached to:</div>
                         <ul class="list-decimal list-inside">
                             <li
                                 class="text-sm mb-2 bg-gray-100 py-2 px-3 relative"
-                                v-for="(member, key) in members"
+                                v-for="(member, key) in taskMembers"
                                 :key="member.id">
                                 {{ member.name }}
 
@@ -205,18 +205,7 @@
                                     @click.prevent="removeMember(member.id)"
                                     type="button"
                                     class="h-full px-1 text-sm font-bold border-s-2 border-red-500 text-red-500 absolute top-0 right-0">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="2.5"
-                                        stroke="currentColor"
-                                        class="size-6">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
+                                    <Icons.XMarkIcon class="h-5 stroke-2 cursor-pointer" />
                                 </button>
                             </li>
                         </ul>
@@ -232,38 +221,31 @@
                                 disabled>
                                 Choose member to attach
                             </option>
-                            <option
+                            <template
                                 v-for="user in users"
-                                :value="user">
-                                {{ user.name }}
-                            </option>
+                                :key="user.id">
+                                <option
+                                    v-if="!taskRecord.member_user_ids.includes(user.id)"
+                                    :value="user">
+                                    {{ user.name }}
+                                </option>
+                            </template>
                         </select>
                         <button
                             @click.prevent="attachMember()"
                             type="button"
                             class="flex-none px-2 h-full ml-1 rounded text-sm font-bold border-2 border-gray-500"
                             value="Assign">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="2.5"
-                                stroke="currentColor"
-                                class="size-6">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
+                            <Icons.PlusIcon class="h-5 stroke-2 cursor-pointer" />
                         </button>
                     </div>
 
                     <div
-                        v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.members"
+                        v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.member_user_ids"
                         class="col-span-2 text-xs text-red-500">
-                        <div v-for="error in apiResponse.data.members">{{ error }}</div>
+                        <div v-for="error in apiResponse.data.member_user_ids">{{ error }}</div>
                     </div>
-                    <!-- end: members field -->
+                    <!-- end: taskMembers field -->
 
                     <!-- Description field -->
                     <TextArea
@@ -517,18 +499,23 @@
 
 <script setup>
 import { ref, provide } from "vue"
+import { storeToRefs } from "pinia"
+
+import { useTaskManagerStore } from "@/stores/app"
 import * as Icons from "@heroicons/vue/24/outline"
-import * as TagServices from "../../services/TagServices"
-import * as ProjectServices from "../../services/ProjectServices"
-import * as CategoryServices from "../../services/CategoryServices"
-import * as PriorityServices from "../../services/PriorityServices"
-import * as StatusServices from "../../services/StatusServices"
-import * as TaskServices from "../../services/TaskServices"
-import * as UserServices from "../../services/UserServices"
+import * as TagServices from "@/services/TagServices"
+import * as ProjectServices from "@/services/ProjectServices"
+import * as CategoryServices from "@/services/CategoryServices"
+import * as PriorityServices from "@/services/PriorityServices"
+import * as StatusServices from "@/services/StatusServices"
+import * as TaskServices from "@/services/TaskServices"
+import * as UserServices from "@/services/UserServices"
 import Modal from "./Modal.vue"
 import Input from "./Input.vue"
 import Button from "./Button.vue"
 import TextArea from "./TextArea.vue"
+
+let store = useTaskManagerStore()
 
 const props = defineProps({
     name: [String, Number],
@@ -540,19 +527,10 @@ const props = defineProps({
 
 const subListsOpen = ref([])
 
+const selectedForm = ref("tag")
 const isOpen = ref(false)
 
-const selectedForm = ref("tag")
-
-const tasks = ref([])
-const tags = ref([])
-const projects = ref([])
-const categories = ref([])
-const priorities = ref([])
-const statuses = ref([])
-const users = ref([])
-const members = ref([])
-const user = ref({})
+const { tasks, tags, projects, categories, priorities, statuses, users, user, taskRecord, taskMembers, apiResponse } = storeToRefs(store)
 
 const navItems = ref([
     { label: "Plan", icon: "CalendarIcon", subList: [] },
@@ -578,11 +556,7 @@ const navItems = ref([
         label: "Members",
         name: "member",
         icon: "UserGroupIcon",
-        subList: [
-            { name: "Prototype", color: "bg-purple-600" },
-            { name: "Research", color: "bg-green-600" },
-            { name: "Testing", color: "bg-yellow-400" }
-        ]
+        subList: users
     }
 ])
 
@@ -599,14 +573,13 @@ const openCloseSublists = (subList) => {
 const showForm = (form) => {
     isOpen.value = true
     selectedForm.value = form
-    console.log(form, isOpen.value)
+    // console.log(form, isOpen.value)
 
     //clear any api response data
     apiResponse.value = {}
 }
 
 ///////////////////////
-var apiResponse = ref({})
 const tagRecord = ref({
     name: "",
     color: "bg-purple-600",
@@ -617,29 +590,17 @@ const projectRecord = ref({
     color: "bg-purple-600",
     description: ""
 })
-const taskRecord = ref({
-    project_id: "",
-    name: "",
-    color: "bg-purple-600",
-    priority_id: "",
-    category_id: "",
-    status_id: "",
-    start_date: "",
-    end_date: "",
-    description: "",
-    members: []
-})
 
 function attachMember() {
-    members.value.push(user.value)
-    taskRecord.value.members = members.value.map((m) => m.id)
+    taskMembers.value.push(user.value)
+    taskRecord.value.member_user_ids = taskMembers.value.map((m) => m.id)
     user.value = {}
 }
 
 function removeMember(id) {
-    members.value = members.value.filter((m) => m.id !== id)
-    taskRecord.value.members = members.value.map((m) => m.id)
-    // delete members.value[key]
+    taskMembers.value = taskMembers.value.filter((m) => m.id !== id)
+    taskRecord.value.member_user_ids = taskMembers.value.map((m) => m.id)
+    // delete taskMembers.value[key]
 }
 
 async function tagStore() {
@@ -676,7 +637,7 @@ async function taskStore() {
 
     if (response.status == "success") {
         //reset the tagRecord
-        tagRecord.value = {
+        taskRecord.value = {
             name: "",
             color: "bg-purple-600",
             description: ""
@@ -686,13 +647,13 @@ async function taskStore() {
 
 TaskServices.Fetch().then((response) => {
     if (response.status == "success") {
-        tasks.value = response.data
+        store.tasks = response.data
     }
 })
 
 TagServices.Fetch().then((response) => {
     if (response.status == "success") {
-        tags.value = response.data
+        store.tags = response.data
     }
 })
 
@@ -704,25 +665,25 @@ ProjectServices.Fetch().then((response) => {
 
 CategoryServices.Fetch().then((response) => {
     if (response.status == "success") {
-        categories.value = response.data
+        store.categories = response.data
     }
 })
 
 PriorityServices.Fetch().then((response) => {
     if (response.status == "success") {
-        priorities.value = response.data
+        store.priorities = response.data
     }
 })
 
 StatusServices.Fetch().then((response) => {
     if (response.status == "success") {
-        statuses.value = response.data
+        store.statuses = response.data
     }
 })
 
 UserServices.Fetch().then((response) => {
     if (response.status == "success") {
-        users.value = response.data
+        store.users = response.data
     }
 })
 </script>

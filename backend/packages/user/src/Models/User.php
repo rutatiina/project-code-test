@@ -6,6 +6,7 @@ namespace ProjectCode\User\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -32,6 +33,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['color'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -43,5 +46,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected function color(): Attribute
+    {
+        $colors = [
+            "bg-purple-600",
+            "bg-green-600",
+            "bg-yellow-400"
+        ];
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $colors[array_rand($colors)],
+        );
     }
 }

@@ -41,8 +41,8 @@ class TaskController extends Controller
             'status_id' => 'required|numeric',
             'priority_id' => 'required|numeric',
             'description' => 'required|max:255',
-            'members' => 'required|array',
-            'members.*' => 'required|numeric',
+            'member_user_ids' => 'required|array',
+            'member_user_ids.*' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -64,10 +64,9 @@ class TaskController extends Controller
         $record->status_id = $request->status_id;
         $record->description = $request->description;
         $record->save();
-        
 
         //save the members
-        foreach($request->members as $userId) {
+        foreach ($request->member_user_ids as $userId) {
             $recordMember = new TaskMember();
             $recordMember->project_id = $request->project_id;
             $recordMember->task_id = $record->id;
@@ -108,15 +107,16 @@ class TaskController extends Controller
 
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:tasks,id',
-            'project_id' => 'numeric',
-            'name' => 'max:255',
-            'color' => 'max:255',
-            'start_date' => 'date',
-            'end_date' => 'date',
-            'category_id' => 'numeric',
-            'status_id' => 'numeric',
-            'priority_id' => 'numeric',
-            'description' => 'max:255',
+            'project_id' => 'required|numeric',
+            'name' => 'required|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'category_id' => 'required|numeric',
+            'status_id' => 'required|numeric',
+            'priority_id' => 'required|numeric',
+            'description' => 'required|max:255',
+            'member_user_ids' => 'required|array',
+            'member_user_ids.*' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -127,7 +127,11 @@ class TaskController extends Controller
             return response()->json($response);
         }
 
-        $record = Task::find($record);
+        //delete all members
+        TaskMember::where("task_id", $request->id)->forceDelete();
+
+        $record = Task::find($request->id);
+
         if ($request->project_id) $record->project_id = $request->project_id;
         if ($request->name) $record->name = $request->name;
         if ($request->name) $record->slug = Str::of($request->name)->slug('-');
@@ -138,6 +142,17 @@ class TaskController extends Controller
         if ($request->status_id) $record->status_id = $request->status_id;
         if ($request->description) $record->description = $request->description;
         $record->save();
+
+        //save the members
+        foreach ($request->member_user_ids as $userId) {
+            $recordMember = new TaskMember();
+            $recordMember->project_id = $request->project_id;
+            $recordMember->task_id = $record->id;
+            $recordMember->user_id = $userId;
+            $recordMember->save();
+        }
+
+
         $record = $record->fresh();
 
         $response = [
