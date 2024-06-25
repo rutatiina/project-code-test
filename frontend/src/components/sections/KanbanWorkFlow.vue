@@ -426,12 +426,9 @@ async function taskUpdate() {
 async function taskDelete(task) {
     const index = tasks.value.indexOf(task)
     if (index > -1) {
-        console.log("============= nailed")
         tasks.value.splice(index, 1)
+        await store.tasksDelete(task)
     }
-
-    // const response = await TaskServices.Delete(task.id)
-    // apiResponse.value = response
 }
 
 // onMounted(() => console.log(statusRefs.value))

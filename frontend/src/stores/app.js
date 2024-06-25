@@ -1,5 +1,6 @@
 import { ref } from "vue"
 import { defineStore } from "pinia"
+import * as TaskServices from "@/services/TaskServices"
 
 export const useTaskManagerStore = defineStore("taskManager", () => {
     const tasks = ref([])
@@ -27,6 +28,21 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
         member_user_ids: []
     })
 
+    //fetch tasks
+    function tasksFetch() {
+        TaskServices.Fetch().then((response) => {
+            if (response.status == "success") {
+                tasks.value = response.data
+            }
+        })
+    }
+
+    function tasksDelete(task) {
+        TaskServices.Delete(task.id).then(() => {
+            tasksFetch()
+        })
+    }
+
     return {
         tasks,
         tags,
@@ -39,6 +55,9 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
         user,
         taskRecord,
         taskMembers,
-        apiResponse
+        apiResponse,
+
+        tasksFetch,
+        tasksDelete
     }
 })
