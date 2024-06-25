@@ -72,6 +72,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue"
 import axios from "axios"
+import router from "../router"
+
 import { storeToRefs } from "pinia"
 import { useTaskManagerStore } from "@/stores/app"
 let store = useTaskManagerStore()
@@ -87,6 +89,10 @@ async function login() {
         const response = await axios.post("/login", loginRequest.value)
         // Handle successful response (optional)
         apiResponse.value = response.data
+
+        if (response.data.status == "success") {
+            router.push("/app")
+        }
     } catch (error) {
         console.log(error)
         apiResponse.value = {

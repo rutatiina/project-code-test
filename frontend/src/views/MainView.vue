@@ -43,8 +43,8 @@
                             'border-b-4 border-lime-300 duration-300': activeTab === 'priority-chart'
                         }"
                         class="pb-4 flex space-x-2 items-center cursor-pointer">
-                        <ArrowsPointingInIcon class="w-5 h-5" />
-                        <span>Priority Chart</span>
+                        <RectangleStackIcon class="w-5 h-5" />
+                        <span>Tasks</span>
                     </div>
                     <div
                         @click="changeTab('kanban-workflow')"
@@ -80,7 +80,8 @@ import {
     ChevronLeftIcon,
     ChevronRightIcon,
     WalletIcon,
-    CalendarIcon
+    CalendarIcon,
+    RectangleStackIcon
 } from "@heroicons/vue/24/outline"
 import SideBar from "../components/shared/SideBar.vue"
 import KanbanWorkFlow from "../components/sections/KanbanWorkFlow.vue"
