@@ -17,7 +17,7 @@ class Task extends Model
 
     protected $guarded = [];
 
-    protected $with = ['status', 'members', 'priority', 'tags'];
+    protected $with = ['status', 'members', 'priority', 'tags', 'category'];
     protected $appends = ['member_user_ids'];
 
     /**
@@ -34,6 +34,14 @@ class Task extends Model
     public function priority(): HasOne
     {
         return $this->hasOne(Priority::class, 'id', 'priority_id');
+    }
+
+    /**
+     * Get the phone priority with the task.
+     */
+    public function category(): HasOne
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
     /**

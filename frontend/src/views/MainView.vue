@@ -38,9 +38,9 @@
                         <span>Backlog</span>
                     </div>
                     <div
-                        @click="changeTab('priority-chart')"
+                        @click="changeTab('tasks')"
                         :class="{
-                            'border-b-4 border-lime-300 duration-300': activeTab === 'priority-chart'
+                            'border-b-4 border-lime-300 duration-300': activeTab === 'tasks'
                         }"
                         class="pb-4 flex space-x-2 items-center cursor-pointer">
                         <RectangleStackIcon class="w-5 h-5" />
@@ -60,7 +60,7 @@
 
             <KanbanWorkFlow v-if="activeTab === 'kanban-workflow'" />
 
-            <PriorityChart v-if="activeTab === 'priority-chart'" />
+            <Tasks v-if="activeTab === 'tasks'" />
 
             <BackLog v-if="activeTab === 'backlog'" />
         </div>
@@ -85,7 +85,7 @@ import {
 } from "@heroicons/vue/24/outline"
 import SideBar from "../components/shared/SideBar.vue"
 import KanbanWorkFlow from "../components/sections/KanbanWorkFlow.vue"
-import PriorityChart from "../components/sections/PriorityChart.vue"
+import Tasks from "../components/sections/Tasks.vue"
 import BackLog from "../components/sections/BackLog.vue"
 import Button from "../components/shared/Button.vue"
 import Fab from "../components/shared/Fab.vue"
