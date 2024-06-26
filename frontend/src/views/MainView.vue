@@ -67,7 +67,7 @@
     </div>
 </template>
 
-<script setup>
+<script>
 import { ref, reactive } from "vue"
 import { Switch } from "@headlessui/vue"
 import {
@@ -92,10 +92,37 @@ import Fab from "../components/shared/Fab.vue"
 import Tag from "../components/shared/Tag.vue"
 import Card from "../components/shared/Card.vue"
 import Calendar from "../components/shared/Calendar.vue"
-
-const activeTab = ref("kanban-workflow")
-
-const changeTab = (tab) => (activeTab.value = tab)
+export default {
+    components: {
+        SideBar,
+        KanbanWorkFlow,
+        Tasks,
+        BackLog,
+        Button,
+        ArrowsPointingInIcon, //
+        ChartBarIcon,
+        Square3Stack3DIcon,
+        MagnifyingGlassIcon,
+        ChevronDownIcon,
+        ChevronUpIcon,
+        ChevronLeftIcon,
+        ChevronRightIcon,
+        WalletIcon,
+        CalendarIcon,
+        RectangleStackIcon
+    },
+    data() {
+        return {
+            activeTab: "kanban-workflow"
+        }
+    },
+    methods: {
+        changeTab(tab) {
+            this.activeTab = tab
+        }
+    }
+    // Add imports for icons and other dependencies here
+}
 </script>
 
 <style scoped>
