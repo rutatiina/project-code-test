@@ -14,9 +14,10 @@ export async function Store(record) {
     }
 }
 
-export async function Fetch() {
+export async function Fetch(filter) {
+    let s = new URLSearchParams(filter).toString()
     try {
-        const response = await axios.get("/tasks")
+        const response = await axios.get("/tasks?" + s)
         return response.data
     } catch (error) {
         console.log(error)

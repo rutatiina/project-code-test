@@ -13,7 +13,14 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
     const members = ref([])
     const taskMembers = ref([])
     const user = ref({})
-    var apiResponse = ref({})
+    const apiResponse = ref({})
+
+    //task filter parameters
+    const taskFilter = ref({
+        search: "",
+        start_date: "",
+        end_date: ""
+    })
 
     const taskRecord = ref({
         project_id: "",
@@ -30,7 +37,7 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
 
     //fetch tasks
     function tasksFetch() {
-        TaskServices.Fetch().then((response) => {
+        TaskServices.Fetch(taskFilter.value).then((response) => {
             if (response.status == "success") {
                 tasks.value = response.data
             }
@@ -56,6 +63,7 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
         taskRecord,
         taskMembers,
         apiResponse,
+        taskFilter,
 
         tasksFetch,
         tasksDelete

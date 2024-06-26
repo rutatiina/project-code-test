@@ -4,11 +4,15 @@
             <Icons.MagnifyingGlassIcon class="w-5 h-5" />
             <!-- <input placeholder="Search for something" class="h-full bg-lime-50 h-12" @keyup="searchCard($event)"> -->
             <input
+                v-model="taskFilter.search"
+                @keyup="store.tasksFetch"
                 class="w-full h-10 border-2 p-2 rounded text-sm"
                 placeholder="Search for something" />
 
             <div class="relative">
                 <input
+                    v-model="taskFilter.start_date"
+                    @change="store.tasksFetch"
                     id="stat-date"
                     name="stat-date"
                     type="date"
@@ -23,6 +27,8 @@
 
             <div class="relative">
                 <input
+                    v-model="taskFilter.end_date"
+                    @change="store.tasksFetch"
                     id="stat-date"
                     name="stat-date"
                     type="date"
@@ -35,12 +41,11 @@
                 </label>
             </div>
         </div>
-        
     </div>
 
     <div class="w-full h-full overflow-auto">
         <div class="relative">
-            <table class="w-full text-sm text-left text-gray-500">
+            <table class="w-full text-sm text-left text-gray-900">
                 <thead class="text-xs text-gray-700 uppercase bg-lime-300">
                     <tr>
                         <th
@@ -89,10 +94,12 @@
                             {{ task.name }}
                         </td>
                         <td class="px-6 py-4">
-                            <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold capitalize">{{ task.priority.name }}</div>
+                            <!-- <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold capitalize">{{ task.priority.name }}</div> -->
+                            {{ task.priority.name }}
                         </td>
                         <td class="px-6 py-4">
-                            <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold capitalize">{{ task.category.name }}</div>
+                            <!-- <div class="w-auto px-2 bg-rose-200 text-rose-600 py-1 rounded-full font-bold capitalize">{{ task.category.name }}</div> -->
+                            {{ task.category.name }}
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-2 text-slate-500 font-semibold text-[10px]">
@@ -130,65 +137,27 @@ import Calendar from "../shared/Calendar.vue"
 import * as StatusServices from "../../services/StatusServices"
 import * as TaskServices from "../../services/TaskServices"
 
-let store = useTaskManagerStore()
-const { tasks, tags, projects, categories, priorities, statuses, users, user, taskRecord, taskMembers, apiResponse } = storeToRefs(store)
-
-const enabled = ref(false)
-
-const searchCard = (e) => {
-    // console.log(e.target.value)
-    let filteredCards = cards.value.filter((card) => card.members.includes(parseInt(e.target.value)))
-    if (e.target.value) cards.value = filteredCards
-    console.log(cards.value)
-}
-
-const cards = ref([
-    { id: 1, status: "doing", priority: "high", date: "5th October 2022 - 8th October 2022", members: [1, 2] },
-    { id: 2, status: "done", priority: "high", date: "5th October 2022 - 8th October 2022", members: [1] },
-    { id: 3, status: "to-do", priority: "medium", date: "5th October 2022 - 8th October 2022", members: [1, 2, 3] },
-    { id: 4, status: "doing", priority: "low", date: "5th October 2022 - 8th October 2022", members: [1, 4, 5] },
-    { id: 5, status: "doing", priority: "low", date: "5th October 2022 - 8th October 2022", members: [1, 3, 4, 5] },
-    { id: 6, status: "to-do", priority: "low", date: "5th October 2022 - 8th October 2022", members: [1, 3, 4, 5] },
-    { id: 7, status: "to-do", priority: "low", date: "5th October 2022 - 8th October 2022", members: [1, 4, 5] },
-    { id: 8, status: "doing", priority: "high", date: "5th October 2022 - 8th October 2022", members: [1, 2, 3, 4, 5] },
-    { id: 9, status: "done", priority: "high", date: "5th October 2022 - 8th October 2022", members: [1, 2, 3, 4, 5] },
-    { id: 10, status: "verified", priority: "medium", date: "5th October 2022 - 8th October 2022", members: [1, 2, 3, 4, 5] },
-    { id: 11, status: "refined", priority: "medium", date: "5th October 2022 - 8th October 2022", members: [1, 2, 3, 4, 5] }
-])
-
-const columns = ref(["to-do", "refined", "verified", "doing", "done"])
-
-const statusRefs = ref([])
-const taskDragged = ref([])
-
-const dragStart = (task) => {
-    taskDragged.value = task
-}
-
-StatusServices.Fetch().then((response) => {
-    if (response.status == "success") {
-        statuses.value = response.data
-    }
-})
+const store = useTaskManagerStore()
+const {
+    tasks, //
+    tags,
+    projects,
+    categories,
+    priorities,
+    statuses,
+    users,
+    user,
+    taskRecord,
+    taskMembers,
+    apiResponse,
+    taskFilter
+} = storeToRefs(store)
 
 TaskServices.Fetch().then((response) => {
     if (response.status == "success") {
         tasks.value = response.data
     }
 })
-
-function onDragEnter(status) {
-    TaskServices.Update(taskDragged.value.id, { status_id: status.id }).then((response) => {
-        if (response.status == "success") {
-            // tasks.value = response.data
-
-            //find the task being dragged and update its status
-            var foundIndex = tasks.value.findIndex((t) => t.id == taskDragged.value.id)
-            tasks.value[foundIndex].status_id = status.id
-            tasks.value[foundIndex].status = status
-        }
-    })
-}
 
 //Edit task
 const isOpen = ref(false)

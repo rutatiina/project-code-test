@@ -15,9 +15,16 @@ class TaskController extends Controller
      * fetch records.
      * GET - api/categories
      */
-    public function index()
+    public function index(Request $request)
     {
-        $records = Task::get();
+        $query = Task::query();
+        if ($request->search) $query->where("name", 'like', '%' . $request->search . '%');
+        if ($request->start_date) $query->whereDate('start_date', '>=', $request->start_date);
+        if ($request->end_date) $query->whereDate('end_date', '<=', $request->end_date);
+
+        // echo $query->toSql(); exit;
+
+        $records = $query->get();
         $response = [
             "status" => "success",
             "data" => $records,
