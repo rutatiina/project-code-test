@@ -25,6 +25,15 @@ class TaskController extends Controller
         if ($request->trashed == "true") $query->whereNotNull('deleted_at');
         if ($request->trashed == "true") $query->withTrashed();
         if ($request->expired == "true") $query->whereDate('end_date', '<=', Carbon::now());
+        if ($request->priority) $query->where('priority_id', $request->priority);
+        if ($request->category) $query->where('category_id', $request->category);
+
+
+        if ($request->member) {
+            $query->whereHas('members', function ($q) use ($request) {
+                $q->where("user_id", $request->member);
+            });
+        }
 
         $query->orderByDesc('name ASC');
 

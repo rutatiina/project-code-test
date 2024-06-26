@@ -1,6 +1,6 @@
 <template>
     <div class="w-full h-20 border-b flex items-center justify-between px-4">
-        <div class="flex w-full space-x-4 items-center mx-5 my-2">
+        <div class="flex w-full space-x-4 items-center mx-5 my-2 relative">
             <Icons.ArrowPathIcon
                 @click="store.tasksFetch()"
                 class="w-8 cursor-pointer stroke-2" />
@@ -94,7 +94,52 @@
                         <th
                             scope="col"
                             class="px-6 py-3">
-                            Members
+                            <div class="z-10">
+                                <Menu
+                                    as="div"
+                                    class="relative text-left">
+                                    <div>
+                                        <MenuButton class="uppercase">
+                                            <Icons.ChevronDoubleDownIcon class="w-4 inline cursor-pointer stroke-2" />
+                                            Members
+                                            <ChevronDownIcon
+                                                class="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
+                                                aria-hidden="true" />
+                                        </MenuButton>
+                                    </div>
+
+                                    <transition
+                                        enter-active-class="transition duration-100 ease-out"
+                                        enter-from-class="transform scale-95 opacity-0"
+                                        enter-to-class="transform scale-100 opacity-100"
+                                        leave-active-class="transition duration-75 ease-in"
+                                        leave-from-class="transform scale-100 opacity-100"
+                                        leave-to-class="transform scale-95 opacity-0">
+                                        <MenuItems class="absolute font-normal left-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                                            <div class="px-1 py-1">
+                                                <MenuItem v-slot="{ active }">
+                                                    <button
+                                                        @click=";(taskFilter.member = 0), store.tasksFetch()"
+                                                        :class="[active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center  px-2 py-2 text-sm']">
+                                                        All
+                                                    </button>
+                                                </MenuItem>
+                                            </div>
+                                            <div
+                                                v-for="user in users"
+                                                class="px-1 py-1">
+                                                <MenuItem v-slot="{ active }">
+                                                    <button
+                                                        @click=";(taskFilter.member = user.id), store.tasksFetch()"
+                                                        :class="[active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center  px-2 py-2 text-sm']">
+                                                        {{ user.name }}
+                                                    </button>
+                                                </MenuItem>
+                                            </div>
+                                        </MenuItems>
+                                    </transition>
+                                </Menu>
+                            </div>
                         </th>
                         <th
                             scope="col"
@@ -104,12 +149,98 @@
                         <th
                             scope="col"
                             class="px-6 py-3">
-                            Priority
+                            <Menu
+                                as="div"
+                                class="relative text-left">
+                                <div>
+                                    <MenuButton class="uppercase">
+                                        <Icons.ChevronDoubleDownIcon class="w-4 inline cursor-pointer stroke-2" />
+                                        Priority
+                                        <ChevronDownIcon
+                                            class="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
+                                            aria-hidden="true" />
+                                    </MenuButton>
+                                </div>
+
+                                <transition
+                                    enter-active-class="transition duration-100 ease-out"
+                                    enter-from-class="transform scale-95 opacity-0"
+                                    enter-to-class="transform scale-100 opacity-100"
+                                    leave-active-class="transition duration-75 ease-in"
+                                    leave-from-class="transform scale-100 opacity-100"
+                                    leave-to-class="transform scale-95 opacity-0">
+                                    <MenuItems class="absolute font-normal left-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                                        <div class="px-1 py-1">
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    @click=";(taskFilter.priority = 0), store.tasksFetch()"
+                                                    :class="[active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center  px-2 py-2 text-sm']">
+                                                    All
+                                                </button>
+                                            </MenuItem>
+                                        </div>
+                                        <div
+                                            v-for="priority in priorities"
+                                            class="px-1 py-1">
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    @click=";(taskFilter.priority = priority.id), store.tasksFetch()"
+                                                    :class="[active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center  px-2 py-2 text-sm']">
+                                                    {{ priority.name }}
+                                                </button>
+                                            </MenuItem>
+                                        </div>
+                                    </MenuItems>
+                                </transition>
+                            </Menu>
                         </th>
                         <th
                             scope="col"
                             class="px-6 py-3">
-                            Category
+                            <Menu
+                                as="div"
+                                class="relative text-left">
+                                <div>
+                                    <MenuButton class="uppercase">
+                                        <Icons.ChevronDoubleDownIcon class="w-4 inline cursor-pointer stroke-2" />
+                                        Category
+                                        <ChevronDownIcon
+                                            class="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
+                                            aria-hidden="true" />
+                                    </MenuButton>
+                                </div>
+
+                                <transition
+                                    enter-active-class="transition duration-100 ease-out"
+                                    enter-from-class="transform scale-95 opacity-0"
+                                    enter-to-class="transform scale-100 opacity-100"
+                                    leave-active-class="transition duration-75 ease-in"
+                                    leave-from-class="transform scale-100 opacity-100"
+                                    leave-to-class="transform scale-95 opacity-0">
+                                    <MenuItems class="absolute font-normal left-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+                                        <div class="px-1 py-1">
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    @click=";(taskFilter.category = 0), store.tasksFetch()"
+                                                    :class="[active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center  px-2 py-2 text-sm']">
+                                                    All
+                                                </button>
+                                            </MenuItem>
+                                        </div>
+                                        <div
+                                            v-for="category in categories"
+                                            class="px-1 py-1">
+                                            <MenuItem v-slot="{ active }">
+                                                <button
+                                                    @click=";(taskFilter.category = category.id), store.tasksFetch()"
+                                                    :class="[active ? 'bg-violet-500 text-white' : 'text-gray-900', 'group flex w-full items-center  px-2 py-2 text-sm']">
+                                                    {{ category.name }}
+                                                </button>
+                                            </MenuItem>
+                                        </div>
+                                    </MenuItems>
+                                </transition>
+                            </Menu>
                         </th>
                         <th
                             scope="col"
@@ -153,7 +284,7 @@
                                     v-if="task.deleted_at == null"
                                     class="h-5 stroke-2 cursor-pointer"
                                     @click="taskDelete(task)" />
-                                
+
                                 <Icons.ArrowPathIcon
                                     v-if="task.deleted_at != null"
                                     class="h-5 stroke-2 cursor-pointer"
@@ -168,7 +299,7 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted, provide, watch } from "vue"
-import { Switch } from "@headlessui/vue"
+import { Switch, Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
 import { storeToRefs } from "pinia"
 import * as Icons from "@heroicons/vue/24/outline"
 
@@ -186,6 +317,7 @@ import * as StatusServices from "../../services/StatusServices"
 import * as TaskServices from "../../services/TaskServices"
 
 const store = useTaskManagerStore()
+const showMembers = ref(false)
 const {
     tasks, //
     tags,
@@ -240,7 +372,6 @@ async function taskDelete(task) {
         await store.tasksDelete(task)
     }
 }
-
 
 watch(taskFilter, async (newFilter, oldFilter) => {
     console.log("===============")

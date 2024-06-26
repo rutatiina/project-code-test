@@ -21,7 +21,10 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
         start_date: "",
         end_date: "",
         trashed: false,
-        expired: false
+        expired: false,
+        member: 0,
+        priority: 0,
+        category: 0
     })
 
     const taskRecord = ref({
