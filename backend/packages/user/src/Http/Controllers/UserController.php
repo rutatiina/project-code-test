@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use ProjectCode\User\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -32,9 +33,9 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'color' => 'required|max:255',
-            'description' => 'required|max:255',
+            'email' => 'required|email',
         ]);
+
 
         if ($validator->fails()) {
             $response = [
@@ -45,9 +46,9 @@ class UserController extends Controller
         }
 
         $record = new User();
-        $record->name = $request["name"];
-        $record->slug = Str::of($request["name"])->slug('-');
-        $record->description = $request["description"];
+        $record->name = $request->name;
+        $record->email = $request->email;
+        $record->password = ($request->password) ? Hash::make($request->password) : Hash::make('P@ssw0rd');
         $record->save();
         $record = $record->fresh();
 
@@ -83,6 +84,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:categories,id',
             'name' => 'required|max:255',
+            'email' => 'required|email',
         ]);
 
         if ($validator->fails()) {
@@ -95,8 +97,8 @@ class UserController extends Controller
 
         $record = User::find($tag);
         $record->name = $request->name;
-        $record->slug = Str::of($request->name)->slug('-');
-        $record->description = $request->description;
+        $record->email = $request->email;
+        $record->password = ($request->password) ? Hash::make($request->password) : Hash::make('P@ssw0rd');
         $record->save();
         $record = $record->fresh();
 

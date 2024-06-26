@@ -344,30 +344,39 @@
                     class="grid grid-cols-2 gap-2 -space-y-0"
                     v-if="selectedForm === 'member'">
                     <Input
-                        placeholder="Title"
+                        v-model="memberRecord.name"
+                        placeholder="Name"
                         class="col-span-2" />
+
+                    <div
+                        v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.name"
+                        class="col-span-2 text-xs text-red-500">
+                        <div v-for="error in apiResponse.data.name">{{ error }}</div>
+                    </div>
+
                     <Input
-                        placeholder="Start Date"
-                        type="date" />
-                    <Input
-                        placeholder="End Date"
-                        type="date" />
-                    <Input
-                        placeholder="Priority"
+                        v-model="memberRecord.email"
+                        placeholder="Email"
                         class="col-span-2" />
-                    <TextArea
-                        rows="5"
-                        placeholder="Description"
-                        class="col-span-2" />
-                    <TextArea
-                        rows="5"
-                        placeholder="Members"
-                        class="col-span-2" />
+
+                    <div
+                        v-if="apiResponse.data && apiResponse.status == 'error' && apiResponse.data.email"
+                        class="col-span-2 text-xs text-red-500">
+                        <div v-for="error in apiResponse.data.email">{{ error }}</div>
+                    </div>
+
                     <Button
-                        label="Add new task"
+                        @click.prevent="userStore"
+                        label="Add new member"
                         icon="PlusIcon"
                         color="bg-lime-500 text-white col-span-2"
                         size="xl" />
+
+                    <div
+                        v-if="apiResponse.data && apiResponse.status == 'success'"
+                        class="col-span-2 text-s text-green-600 py-5">
+                        Member create successfully
+                    </div>
                 </form>
                 <form
                     class="grid grid-cols-2 gap-2 -space-y-0"
@@ -590,6 +599,11 @@ const projectRecord = ref({
     color: "bg-purple-600",
     description: ""
 })
+const memberRecord = ref({
+    name: "",
+    email: "",
+    color: "bg-purple-600"
+})
 
 function attachMember() {
     taskMembers.value.push(user.value)
@@ -641,6 +655,19 @@ async function taskStore() {
             name: "",
             color: "bg-purple-600",
             description: ""
+        }
+    }
+}
+
+async function userStore() {
+    const response = await UserServices.Store(memberRecord.value)
+    apiResponse.value = response
+
+    if (response.status == "success") {
+        memberRecord.value = {
+            name: "",
+            color: "bg-purple-600",
+            email: ""
         }
     }
 }

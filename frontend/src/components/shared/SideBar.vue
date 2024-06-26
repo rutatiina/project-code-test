@@ -16,7 +16,7 @@
             </div>
             <div class="flex items-center justify-between space-x-2 text-xs mt-4">
                 <span class="font-bold">Projects</span>
-                <span class="text-slate-500">4/10</span>
+                <span class="text-slate-500">{{ projects.length }}/10</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-1.5 mb-4 my-2">
                 <div
@@ -33,12 +33,18 @@
 
 <script setup>
 import { ref, reactive } from "vue"
+import { storeToRefs } from "pinia"
 import { WalletIcon } from "@heroicons/vue/24/outline"
 import Button from "./Button.vue"
 import Fab from "./Fab.vue"
 import Tag from "./Tag.vue"
 import Card from "./Card.vue"
 import NavItems from "./NavItems.vue"
+import { useTaskManagerStore } from "@/stores/app"
+
+let store = useTaskManagerStore()
+
+const { tasks, projects } = storeToRefs(store)
 
 /*
 //this commented code is to be deleted
