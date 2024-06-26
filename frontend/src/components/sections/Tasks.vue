@@ -1,6 +1,9 @@
 <template>
     <div class="w-full h-20 border-b flex items-center justify-between px-4">
         <div class="flex w-full space-x-4 items-center mx-5 my-2">
+            <Icons.ArrowPathIcon
+                @click="store.tasksFetch()"
+                class="w-8 cursor-pointer stroke-2" />
             <Icons.MagnifyingGlassIcon class="w-5 h-5" />
             <!-- <input placeholder="Search for something" class="h-full bg-lime-50 h-12" @keyup="searchCard($event)"> -->
             <input
@@ -39,6 +42,46 @@
                     class="absolute rounded-lg text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-50 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">
                     End date
                 </label>
+            </div>
+
+            <div class="flex items-center space-x-2 relative text-sm">
+                <span
+                    class="flex items-center space-x-2 cursor-pointer"
+                    @click=";(taskFilter.expired = !taskFilter.expired), store.tasksFetch()">
+                    <span><Icons.ClockIcon class="w-4" /></span>
+                    <span>Expired</span>
+                </span>
+                <Switch
+                    v-model="taskFilter.expired"
+                    @update:modelValue="store.tasksFetch"
+                    :class="taskFilter.expired ? 'bg-lime-400' : 'bg-black'"
+                    class="relative inline-flex h-[20px] w-[35px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <span class="sr-only">Use setting</span>
+                    <span
+                        aria-hidden="true"
+                        :class="taskFilter.expired ? 'translate-x-[15px]' : 'translate-x-0'"
+                        class="pointer-events-none inline-block h-[16px] w-[16px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
+                </Switch>
+            </div>
+
+            <div class="flex items-center space-x-2 relative text-sm">
+                <span
+                    class="flex items-center space-x-2 cursor-pointer"
+                    @click=";(taskFilter.trashed = !taskFilter.trashed), store.tasksFetch()">
+                    <span><Icons.TrashIcon class="w-4" /></span>
+                    <span>Trashed</span>
+                </span>
+                <Switch
+                    v-model="taskFilter.trashed"
+                    @update:modelValue="store.tasksFetch"
+                    :class="taskFilter.trashed ? 'bg-lime-400' : 'bg-black'"
+                    class="relative inline-flex h-[20px] w-[35px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <span class="sr-only">Use setting</span>
+                    <span
+                        aria-hidden="true"
+                        :class="taskFilter.trashed ? 'translate-x-[15px]' : 'translate-x-0'"
+                        class="pointer-events-none inline-block h-[16px] w-[16px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
+                </Switch>
             </div>
         </div>
     </div>
@@ -107,9 +150,14 @@
                                     class="h-5 stroke-2 cursor-pointer"
                                     @click="taskEdit(task)" />
                                 <Icons.TrashIcon
+                                    v-if="task.deleted_at == null"
                                     class="h-5 stroke-2 cursor-pointer"
                                     @click="taskDelete(task)" />
-                                <span>{{ task.date }}</span>
+                                
+                                <Icons.ArrowPathIcon
+                                    v-if="task.deleted_at != null"
+                                    class="h-5 stroke-2 cursor-pointer"
+                                    @click="store.tasksRestore(task)" />
                             </div>
                         </td>
                     </tr>
@@ -119,7 +167,7 @@
     </div>
 </template>
 <script setup>
-import { ref, reactive, onMounted, provide } from "vue"
+import { ref, reactive, onMounted, provide, watch } from "vue"
 import { Switch } from "@headlessui/vue"
 import { storeToRefs } from "pinia"
 import * as Icons from "@heroicons/vue/24/outline"
@@ -192,6 +240,13 @@ async function taskDelete(task) {
         await store.tasksDelete(task)
     }
 }
+
+
+watch(taskFilter, async (newFilter, oldFilter) => {
+    console.log("===============")
+    console.log(taskFilter.trashed)
+    store.tasksFetch()
+})
 
 // onMounted(() => console.log(statusRefs.value))
 </script>

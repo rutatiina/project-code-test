@@ -19,7 +19,9 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
     const taskFilter = ref({
         search: "",
         start_date: "",
-        end_date: ""
+        end_date: "",
+        trashed: false,
+        expired: false
     })
 
     const taskRecord = ref({
@@ -50,6 +52,12 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
         })
     }
 
+    function tasksRestore(task) {
+        TaskServices.Restore(task.id).then(() => {
+            tasksFetch()
+        })
+    }
+
     return {
         tasks,
         tags,
@@ -66,6 +74,7 @@ export const useTaskManagerStore = defineStore("taskManager", () => {
         taskFilter,
 
         tasksFetch,
-        tasksDelete
+        tasksDelete,
+        tasksRestore
     }
 })

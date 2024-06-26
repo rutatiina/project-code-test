@@ -3,6 +3,7 @@
 namespace ProjectCode\TaskManager\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use ProjectCode\TaskManager\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -21,12 +22,16 @@ class TaskController extends Controller
         if ($request->search) $query->where("name", 'like', '%' . $request->search . '%');
         if ($request->start_date) $query->whereDate('start_date', '>=', $request->start_date);
         if ($request->end_date) $query->whereDate('end_date', '<=', $request->end_date);
+        if ($request->trashed == "true") $query->whereNotNull('deleted_at');
+        if ($request->trashed == "true") $query->withTrashed();
+        if ($request->expired == "true") $query->whereDate('end_date', '<=', Carbon::now());
 
-        // echo $query->toSql(); exit;
+        $query->orderByDesc('name ASC');
 
         $records = $query->get();
         $response = [
             "status" => "success",
+            "sql" => $query->toSql(),
             "data" => $records,
         ];
         return response()->json($response);
@@ -191,6 +196,41 @@ class TaskController extends Controller
         $response = [
             "status" => "success",
             "data" => [],
+        ];
+        return response()->json($response);
+    }
+
+
+
+    /**
+     * edit / update record.
+     * PATCH - api/categories/{tag}
+     */
+    public function restore(Request $request, string $record)
+    {
+        $request->request->add(['id' => $record]);
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:tasks,id',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                "status" => "error",
+                "data" => $validator->errors(),
+            ];
+            return response()->json($response);
+        }
+
+        $record = Task::withTrashed()->find($request->id);
+
+        $record->restore();
+
+        $record = $record->fresh();
+
+        $response = [
+            "status" => "success",
+            "data" => $record,
         ];
         return response()->json($response);
     }

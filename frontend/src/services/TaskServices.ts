@@ -55,3 +55,17 @@ export async function Delete(id: number) {
         }
     }
 }
+
+export async function Restore(id: number) {
+    try {
+        const response = await axios.patch("/tasks/" + id+'/restore', { deleted_at: null })
+        // Handle successful response (optional)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return {
+            status: "error",
+            data: { error }
+        }
+    }
+}

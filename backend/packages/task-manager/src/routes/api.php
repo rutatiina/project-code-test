@@ -10,6 +10,8 @@ use ProjectCode\TaskManager\Http\Controllers\StatusController;
 
 Route::group(['middleware' => ['web', 'auth:sanctum']], function () {
 
+    Route::patch('/api/tasks/{task}/restore', [TaskController::class, 'restore']);
+
     Route::resource('/api/projects', ProjectController::class);
     Route::resource('/api/tasks', TaskController::class);
     Route::resource('/api/categories', CategoryController::class);
